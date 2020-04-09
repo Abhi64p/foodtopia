@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "67396310733",
+    "firebase_url": "https://foodtopia-4232d.firebaseio.com",
+    "project_id": "foodtopia-4232d",
+    "storage_bucket": "foodtopia-4232d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:67396310733:android:381cb40f323df3a2c77b84",
+        "android_client_info": {
+          "package_name": "tech.hexify.foodtopia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "67396310733-j56ickre6t8tltp0j6m4v6mrqohg3707.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "tech.hexify.foodtopia",
+            "certificate_hash": "e702123d1beefd637e98ffd12ef340aeaeba2d7c"
+          }
+        },
+        {
+          "client_id": "67396310733-u8pthna32hqtlfe8jde118bjiu3k19g8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDe-kzoLAW_N1p2kPpphtoWfVVpeSeB2U4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "67396310733-u8pthna32hqtlfe8jde118bjiu3k19g8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
