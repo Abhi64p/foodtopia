@@ -33,48 +33,80 @@ class OneTimeProfileScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={[styles.topBar, { elevation: this.getElevation() }]}
-                    opacity={this.getOpacity()}>
-                    <Text style={{ fontSize: 17, fontWeight: 'bold', marginLeft: 10, flex: 3 }}>Enter Personal Details</Text>
-                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', marginRight: 10 }}>
-                        <TouchableOpacity onPress={this.skip}>
-                            <Text style={{ fontSize: 16, color: '#1e88e5' }}>Skip</Text>
-                        </TouchableOpacity>
-                    </View>
+                <View
+                    style={styles.topBar}
+                    opacity={this.getOpacity()}
+                >
+                    <Text style={{ fontSize: 17, fontWeight: 'bold', marginLeft: 10, flex: 1 }}>
+                        Enter Personal Details
+                    </Text>
+                    <TouchableOpacity onPress={this.skip}>
+                        <Text style={{ fontSize: 16, color: '#25b7d3', paddingRight: 10 }}>
+                            Skip
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.contents} opacity={this.getOpacity()}>
-                    <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
-                        <Image source={require('../icons/photo.png')} resizeMode='contain'
-                            style={{ width: '90%', height: '90%' }} />
+                <View
+                    style={styles.contents}
+                    opacity={this.getOpacity()}
+                >
+                    <View
+                        style={{
+                            flex: 1, justifyContent: 'center', alignItems: 'center',
+                            padding: 40
+                        }}>
+                        <Text style={{ textAlign: 'center', fontSize: 18, color: 'grey' }}>
+                            Enter your personal details for faster checkouts.
+                            You can always edit these details later!
+                        </Text>
                     </View>
                     {
-                        !this.state.loading && <View style={{ flex: 1, alignItems: 'center', marginBottom: 20 }}>
-                            <TextInput onChangeText={(text) => { this.state.name = text }} defaultValue={this.state.name}
+                        !this.state.loading &&
+                        <View style={{ flex: 3, alignItems: 'center', marginBottom: 20 }}>
+                            <TextInput
+                                onChangeText={(text) => { this.state.name = text }}
+                                defaultValue={this.state.name}
                                 style={{
                                     width: '80%', borderWidth: 1, borderRadius: 10, padding: 10,
-                                    borderColor: this.state.nameError ? '#e53935' : '#64b5f6', flex: 1, marginTop: 10
+                                    borderColor: this.state.nameError ? '#e53935' : '#25b7d3',
+                                    marginTop: 10
                                 }}
                                 placeholder='Name' />
-                            <TextInput onChangeText={(text) => { this.state.address = text }} defaultValue={this.state.address}
+                            <TextInput
+                                onChangeText={(text) => { this.state.address = text }}
+                                defaultValue={this.state.address}
                                 style={{
                                     width: '80%', borderWidth: 1, borderRadius: 10, padding: 10,
-                                    borderColor: this.state.addressError ? '#e53935' : '#64b5f6', flex: 1, marginTop: 10
+                                    borderColor: this.state.addressError ? '#e53935' : '#25b7d3',
+                                    marginTop: 10
                                 }}
                                 placeholder='Address' />
-                            <TextInput onChangeText={(text) => { this.state.pincode = text }} defaultValue={this.state.pincode}
+                            <TextInput
+                                onChangeText={(text) => { this.state.pincode = text }}
+                                defaultValue={this.state.pincode}
                                 style={{
                                     width: '80%', borderWidth: 1, borderRadius: 10, padding: 10,
-                                    borderColor: this.state.pincodeError ? '#e53935' : '#64b5f6', flex: 1, marginTop: 10
+                                    borderColor: this.state.pincodeError ? '#e53935' : '#25b7d3',
+                                    marginTop: 10
                                 }}
-                                placeholder='Pincode' keyboardType='numeric' />
+                                placeholder='Pincode'
+                                keyboardType='numeric' />
                             {
-                                (!this.state.loading && !this.state.updating) && <View style={{ flex: 2, width: '100%', justifyContent: 'center' }}>
+                                (!this.state.loading && !this.state.updating) &&
+                                <View
+                                    style={{
+                                        flex: 2, width: '100%', justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}
+                                >
                                     <TouchableNativeFeedback
                                         onPress={this.updateDetails}>
-                                        <View style={{
-                                            width: '60%', height: 40, borderRadius: 5, alignItems: 'center', justifyContent: 'center',
-                                            backgroundColor: '#1e88e5', alignSelf: "center"
-                                        }}>
+                                        <View
+                                            style={{
+                                                alignItems: 'center', justifyContent: 'center', width: 250,
+                                                height: 50, borderRadius: 20, backgroundColor: '#25b7d3'
+                                            }}
+                                        >
                                             <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>
                                                 {this.state.networkError ? 'Error, Try again?' : 'Update'}
                                             </Text>
@@ -83,12 +115,16 @@ class OneTimeProfileScreen extends Component {
                                 </View>
                             }
                             {
-                                (!this.state.loading && this.state.updating) && <View style={{ flex: 2, justifyContent: 'center' }}><LoadingView /></View>
+                                (!this.state.loading && this.state.updating) &&
+                                <View style={{ flex: 2, justifyContent: 'center' }}>
+                                    <LoadingView />
+                                </View>
                             }
                         </View>
                     }
                     {
-                        this.state.loading && <View style={{ flex: 1, justifyContent: 'center' }}>
+                        this.state.loading &&
+                        <View style={{ flex: 3, justifyContent: 'center' }}>
                             <LoadingView />
                         </View>
                     }
@@ -98,15 +134,22 @@ class OneTimeProfileScreen extends Component {
                     transparent={true}
                     animationType={"fade"}>
                     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                        <View style={{
-                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%', elevation: 5,
-                            borderRadius: 10, borderWidth: 2, backgroundColor: 'white', borderColor: 'white'
-                        }}>
+                        <View
+                            style={{
+                                alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%',
+                                elevation: 5, borderRadius: 10, borderWidth: 2, backgroundColor: 'white',
+                                borderColor: 'white'
+                            }}
+                        >
                             <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>
                                 Can't connect to server, try again!
+                            </Text>
+                            <TouchableOpacity
+                                style={{ flex: 1, justifyContent: 'center' }}
+                                onPress={this.loadContents}>
+                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>
+                                    Try Again?
                                 </Text>
-                            <TouchableOpacity style={{ flex: 1, justifyContent: 'center' }} onPress={this.loadContents}>
-                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>Try Again?</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -183,16 +226,6 @@ class OneTimeProfileScreen extends Component {
         return 1;
     }
 
-    getElevation = () => {
-        if (this.state.logoutPopup)
-            return 0;
-        if (this.state.loadingError)
-            return 0;
-        if (this.state.showEditMenu)
-            return 0;
-        return 2;
-    }
-
     skip = () => {
         this.props.navigation.dispatch(CommonActions.reset({
             index: 0,
@@ -204,7 +237,7 @@ class OneTimeProfileScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fafafa'
+        backgroundColor: 'white'
     },
     contents: {
         width: '100%',

@@ -7,8 +7,7 @@ import { connect } from 'react-redux';
 
 import { updateProduct } from '../actions/productActions'
 import { changeScreen } from '../actions/settingsActions'
-
-import { fetchJSON } from '../utils/Common'
+import { fetchJSON, Server} from '../utils/Common'
 import LoadingView from '../components/LoadingView'
 
 class ProductScreen extends Component {
@@ -59,8 +58,9 @@ class ProductScreen extends Component {
                         <ScrollView>
                             <Image
                                 style={{ width: '80%', height: 200, alignSelf: 'center', borderRadius: 2, marginTop: 10 }}
-                                source={{ uri: 'data:' + this.state.item.picMime + ';base64,' + this.state.item.pic }}
-                                resizeMode='contain' />
+                                source={{ uri: Server + '/img/' + this.state.item._id }}
+                                resizeMode='contain'
+                            />
                             <View style={{ margin: 40 }}>
                                 {
                                     this.state.stock == 0 &&

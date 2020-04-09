@@ -42,9 +42,18 @@ class CartScreen extends Component {
     render() {
         return (
             <>
-                <View style={[styles.container, { opacity: this.state.popupVisible ? 0.3 : 1.0 }]}>
-                    <View style={[styles.topBar, { elevation: this.state.popupVisible ? 0 : 2 }]}>
-                        <Text style={{ fontSize: 17, fontWeight: 'bold', marginLeft: 10 }}>Cart</Text>
+                <View
+                    style={[styles.container, {
+                        opacity: this.state.popupVisible ? 0.3 : 1.0
+                    }]}>
+                    <View
+                        style={styles.topBar}>
+                        <Text
+                            style={{
+                                fontSize: 17, fontWeight: 'bold', marginLeft: 10,
+                                color: '#212121'
+                            }}
+                        >Cart</Text>
                     </View>
                     {
                         this.state.isCartEmpty && <View style={styles.contents}>
@@ -155,9 +164,9 @@ class CartScreen extends Component {
     }
 
     checkoutPressed = () => {
-        if (this.state.totalAmount < 100)
-            this.setState({ popupVisible: true })
-        else
+        // if (this.state.totalAmount < 100)
+        //     this.setState({ popupVisible: true })
+        // else
             this.props.navigation.navigate('checkoutScreen', {
                 totalAmount: this.state.totalAmount,
                 items: this.props.products
@@ -181,7 +190,7 @@ const styles = StyleSheet.create({
     contents: {
         width: '100%',
         flex: 10,
-        backgroundColor: '#fafafa',
+        backgroundColor: 'white',
         alignItems: 'center',
         justifyContent: 'center'
     }

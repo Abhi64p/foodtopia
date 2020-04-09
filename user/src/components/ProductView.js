@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { TouchableNativeFeedback, View, Image, Dimensions } from 'react-native';
-import TextTicker from 'react-native-text-ticker';
+import { TouchableNativeFeedback, View, Image, Dimensions, Text } from 'react-native';
+
+import { Server } from '../utils/Common'
 
 const window = Dimensions.get('window');
 const cardWidth = window.width * 0.85;
@@ -16,19 +17,15 @@ class ProductView extends Component {
                     backgroundColor: 'white', margin: 15, padding: 10
                 }}>
                     <Image
-                        source={{ uri: this.props.base }}
+                        source={{ uri: Server + '/img/' + this.props.item._id }}
                         style={{ width: '100%', height: '85%' }}
                         resizeMode='cover'
                     />
-                    <TextTicker
+                    <Text
                         style={{ fontSize: 16, marginTop: 10 }}
-                        duration={7000}
-                        loop
-                        repeatSpacer={50}
-                        marqueeDelay={1000}
                     >
                         {this.props.item.name}
-                    </TextTicker>
+                    </Text>
                 </View>
             </TouchableNativeFeedback>
         );

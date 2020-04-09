@@ -33,15 +33,22 @@ class OrderHistoryScreen extends Component {
         return (
             <View style={styles.container}>
                 <View style={styles.topBar}>
-                    <Text style={{ fontSize: 17, fontWeight: 'bold', marginLeft: 10 }}>Order History</Text>
+                    <Text
+                        style={{
+                            fontSize: 17, fontWeight: 'bold', marginLeft: 10,
+                            color: '#212121'
+                        }}
+                    >Order History</Text>
                 </View>
                 <View style={styles.contents} opacity={this.state.cancelPopup ? 0.3 : 1.0}>
                     {
                         (!this.state.loading && !this.state.orderHistoryAvailable) &&
-                        <Text
-                            style={{ fontSize: 17, fontWeight: 'bold', marginLeft: 10 }}>
-                            You don't have any orders!
+                        <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                            <Text
+                                style={{ fontSize: 17, fontWeight: 'bold', marginLeft: 10 }}>
+                                You don't have any orders!
                         </Text>
+                        </View>
                     }
                     {
                         this.state.loading &&
@@ -100,12 +107,11 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'white',
-        elevation: 2
+        backgroundColor: 'white'
     },
     contents: {
         flex: 10,
-        backgroundColor: '#fafafa',
+        backgroundColor: 'white',
     }
 })
 

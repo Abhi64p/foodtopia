@@ -1,119 +1,151 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, TouchableOpacity, Animated, Text } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity, Animated, Text, Easing } from 'react-native';
 import { connect } from 'react-redux'
 
 import ProfileScreen from './ProfileScreen';
 import ProductServiceScreen from './ProductServiceScreen';
 import CartScreen from './CartScreen';
 import OrderHistoryScreen from './OrderHistoryScreen';
-
 import { changeScreen } from '../actions/settingsActions'
+
+import HomeIcon from '../icons/home.png'
+import CartIcon from '../icons/cart.png'
+import HistoryIcon from '../icons/history.png'
+import ProfileIcon from '../icons/profile.png'
+
+const components = {
+    home: ProductServiceScreen,
+    cart: CartScreen,
+    orderHistory: OrderHistoryScreen,
+    profile: ProfileScreen
+}
 
 class MainScreen extends Component {
 
     state = {
-        homeSelected: true,
-        cartSelected: false,
-        orderHistorySelected: false,
-        profileSelected: false,
-        homeSlideUpValue: new Animated.Value(1),
-        cartSlideUpValue: new Animated.Value(0),
-        orderHistorySlideUpValue: new Animated.Value(0),
-        profileSlideUpValue: new Animated.Value(0)
+        homeValue: new Animated.Value(1),
+        cartValue: new Animated.Value(0),
+        orderHistoryValue: new Animated.Value(0),
+        profileValue: new Animated.Value(0)
     }
 
     componentDidUpdate(prevProps) {
         const { mainScreen } = this.props
         if (prevProps.mainScreen !== mainScreen) {
-            switch (mainScreen) {
-                case 'home':
-                    this.homePressed()
-                    break
-                case 'cart':
-                    this.cartPressed()
-                    break
-                case 'orderHistory':
-                    this.orderHistoryPressed()
-                    break
-                case 'profile':
-                    this.profilePressed()
-                    break
-                default: break
-            }
+            this.openNavElement(mainScreen)
+            this.closeNavElement(prevProps.mainScreen)
         }
     }
 
     render() {
+        const Component = components[this.props.mainScreen]
         return (
             <View style={styles.container}>
                 <View style={styles.contents}>
-                    {this.state.homeSelected && <ProductServiceScreen navigation={this.props.navigation} cartPressed={this.cartPressed} />}
-                    {this.state.cartSelected && <CartScreen navigation={this.props.navigation} />}
-                    {this.state.orderHistorySelected && <OrderHistoryScreen
+                    <Component
                         navigation={this.props.navigation}
-                        route={this.props.route}
-                    />}
-                    {this.state.profileSelected && <ProfileScreen navigation={this.props.navigation} />}
+                        cartPressed={this.cartPressed}
+                    />
                 </View>
                 <View style={styles.bottomBar}>
-                    <TouchableOpacity onPress={() => { this.props.changeScreen('home') }}>
-                        <Animated.View style={{
-                            transform: [{ translateY: this.state.homeSlideUpValue.interpolate({ inputRange: [0, 1], outputRange: [8, -2] }) }],
-                            alignItems: 'center'
-                        }}>
-                            <Image style={styles.bottomBarIconStyle}
-                                source={this.state.homeSelected ? require('../icons/filled/home.png') : require('../icons/outline/home.png')} />
-                        </Animated.View>
-                        <Animated.View style={{
-                            opacity: this.state.homeSlideUpValue.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
-                            transform: [{ translateY: -7 }]
-                        }}>
-                            <Text>Home</Text>
-                        </Animated.View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { this.props.changeScreen('cart') }}>
-                        <Animated.View style={{
-                            transform: [{ translateY: this.state.cartSlideUpValue.interpolate({ inputRange: [0, 1], outputRange: [8, -2] }) }],
-                            alignItems: 'center'
-                        }}>
-                            <Image style={styles.bottomBarIconStyle}
-                                source={this.state.cartSelected ? require('../icons/filled/cart.png') : require('../icons/outline/cart.png')} />
-                        </Animated.View>
-                        <Animated.View style={{
-                            opacity: this.state.cartSlideUpValue.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
-                            transform: [{ translateY: -7 }]
-                        }}>
-                            <Text>Cart</Text>
+                    <TouchableOpacity onPress={this.homePressed}>
+                        <Animated.View
+                            style={[styles.bottomBarElement, {
+                                backgroundColor: this.state.homeValue.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: ['#ffffff', '#eeeeee']
+                                })
+                            }]}>
+                            <Image
+                                style={styles.bottomBarIconStyle}
+                                source={HomeIcon}
+                            />
+                            <Animated.Text
+                                style={[styles.bottomBarText, {
+                                    width: this.state.homeValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [0, 40]
+                                    }),
+                                    marginLeft: this.state.homeValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [0, 5]
+                                    })
+                                }]}
+                            >Home
+                            </Animated.Text>
                         </Animated.View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { this.props.changeScreen('orderHistory') }}>
-                        <Animated.View style={{
-                            transform: [{ translateY: this.state.orderHistorySlideUpValue.interpolate({ inputRange: [0, 1], outputRange: [8, -2] }) }],
-                            alignItems: 'center'
-                        }}>
-                            <Image style={styles.bottomBarIconStyle}
-                                source={this.state.orderHistorySelected ? require('../icons/filled/history.png') : require('../icons/outline/history.png')} />
-                        </Animated.View>
-                        <Animated.View style={{
-                            opacity: this.state.orderHistorySlideUpValue.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
-                            transform: [{ translateY: -7 }]
-                        }}>
-                            <Text>History</Text>
+                    <TouchableOpacity onPress={this.cartPressed}>
+                        <Animated.View
+                            style={[styles.bottomBarElement, {
+                                backgroundColor: this.state.cartValue.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: ['#ffffff', '#eeeeee']
+                                })
+                            }]}>
+                            <Image
+                                style={styles.bottomBarIconStyle}
+                                source={CartIcon}
+                            />
+                            <Animated.Text
+                                style={[styles.bottomBarText, {
+                                    width: this.state.cartValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [0, 28]
+                                    }),
+                                    marginLeft: this.state.cartValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [0, 5]
+                                    })
+                                }]}
+                            >Cart
+                            </Animated.Text>
                         </Animated.View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { this.props.changeScreen('profile') }}>
-                        <Animated.View style={{
-                            transform: [{ translateY: this.state.profileSlideUpValue.interpolate({ inputRange: [0, 1], outputRange: [8, -2] }) }],
-                            alignItems: 'center'
-                        }}>
-                            <Image style={styles.bottomBarIconStyle}
-                                source={this.state.profileSelected ? require('../icons/filled/profile.png') : require('../icons/outline/profile.png')} />
+                    <TouchableOpacity onPress={this.orderHistoryPressed}>
+                        <Animated.View
+                            style={[styles.bottomBarElement, {
+                                backgroundColor: this.state.orderHistoryValue.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: ['#ffffff', '#eeeeee']
+                                })
+                            }]}>
+                            <Image
+                                style={styles.bottomBarIconStyle}
+                                source={HistoryIcon}
+                            />
+                            <Animated.Text
+                                style={[styles.bottomBarText, {
+                                    width: this.state.orderHistoryValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [0, 35]
+                                    }),
+                                    marginLeft: this.state.orderHistoryValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [0, 5]
+                                    })
+                                }]}
+                            >Orders
+                            </Animated.Text>
                         </Animated.View>
-                        <Animated.View style={{
-                            opacity: this.state.profileSlideUpValue.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
-                            transform: [{ translateY: -7 }]
-                        }}>
-                            <Text>Profile</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.profilePressed}>
+                        <Animated.View
+                            style={[styles.bottomBarElement, {
+                                backgroundColor: this.state.profileValue.interpolate({
+                                    inputRange: [0, 1],
+                                    outputRange: ['#ffffff', '#eeeeee']
+                                })
+                            }]}>
+                            <Image
+                                style={styles.bottomBarIconStyle}
+                                source={ProfileIcon}
+                            />
+                            <Animated.Text
+                                style={[styles.bottomBarText, {
+                                    width: this.state.profileValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [0, 43]
+                                    }),
+                                    marginLeft: this.state.profileValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [0, 5]
+                                    })
+                                }]}
+                            >Profile
+                            </Animated.Text>
                         </Animated.View>
                     </TouchableOpacity>
                 </View>
@@ -122,116 +154,39 @@ class MainScreen extends Component {
     }
 
     homePressed = () => {
-        if (!this.state.homeSelected) {
-            if (this.state.cartSelected)
-                this.startCartSlideDownAnimation();
-            else if (this.state.orderHistorySelected)
-                this.startOrderHistorySlideDownAnimation();
-            else if (this.state.profileSelected)
-                this.startProfileSlideDownAnimation();
-
-            this.startHomeSlideUpAnimation();
-
-            this.setState({
-                homeSelected: true,
-                cartSelected: false,
-                orderHistorySelected: false,
-                profileSelected: false
-            });
-        }
+        if (this.state.currentScreen !== 'home')
+            this.props.changeScreen('home')
     }
 
     cartPressed = () => {
-        if (!this.state.cartSelected) {
-            if (this.state.homeSelected)
-                this.startHomeSlideDownAnimation();
-            else if (this.state.orderHistorySelected)
-                this.startOrderHistorySlideDownAnimation();
-            else if (this.state.profileSelected)
-                this.startProfileSlideDownAnimation();
+        if (this.state.currentScreen !== 'cart')
+            this.props.changeScreen('cart')
 
-            this.startCartSlideUpAnimation();
-
-            this.setState({
-                homeSelected: false,
-                cartSelected: true,
-                orderHistorySelected: false,
-                profileSelected: false
-            });
-        }
     }
 
     orderHistoryPressed = () => {
-        if (!this.state.orderHistorySelected) {
-            if (this.state.homeSelected)
-                this.startHomeSlideDownAnimation();
-            else if (this.state.cartSelected)
-                this.startCartSlideDownAnimation();
-            else if (this.state.profileSelected)
-                this.startProfileSlideDownAnimation();
-
-            this.startOrderHistorySlideUpAnimation();
-
-            this.setState({
-                homeSelected: false,
-                cartSelected: false,
-                orderHistorySelected: true,
-                profileSelected: false
-            });
-        }
+        if (this.state.currentScreen !== 'orderHistory')
+            this.props.changeScreen('orderHistory')
     }
 
     profilePressed = () => {
-        if (!this.state.profileSelected) {
-            if (this.state.homeSelected)
-                this.startHomeSlideDownAnimation();
-            else if (this.state.cartSelected)
-                this.startCartSlideDownAnimation();
-            else if (this.state.orderHistorySelected)
-                this.startOrderHistorySlideDownAnimation();
-
-            this.startProfileSlideUpAnimation();
-
-            this.setState({
-                homeSelected: false,
-                cartSelected: false,
-                orderHistorySelected: false,
-                profileSelected: true
-            });
-        }
+        if (this.state.currentScreen !== 'profile')
+            this.props.changeScreen('profile')
     }
 
-    startHomeSlideUpAnimation = () => {
-        Animated.timing(this.state.homeSlideUpValue, { toValue: 1, duration: 300, useNativeDriver: true, delay: 0 }).start();
-    };
+    openNavElement = (screenName) => {
+        Animated.timing(this.state[screenName + 'Value'], {
+            toValue: 1,
+            duration: 200
+        }).start()
+    }
 
-    startHomeSlideDownAnimation = () => {
-        Animated.timing(this.state.homeSlideUpValue, { toValue: 0, duration: 300, useNativeDriver: true, delay: 0 }).start();
-    };
-
-    startCartSlideUpAnimation = () => {
-        Animated.timing(this.state.cartSlideUpValue, { toValue: 1, duration: 300, useNativeDriver: true, delay: 0 }).start();
-    };
-
-    startCartSlideDownAnimation = () => {
-        Animated.timing(this.state.cartSlideUpValue, { toValue: 0, duration: 300, useNativeDriver: true, delay: 0 }).start();
-    };
-
-    startOrderHistorySlideUpAnimation = () => {
-        Animated.timing(this.state.orderHistorySlideUpValue, { toValue: 1, duration: 300, useNativeDriver: true, delay: 0 }).start();
-    };
-
-    startOrderHistorySlideDownAnimation = () => {
-        Animated.timing(this.state.orderHistorySlideUpValue, { toValue: 0, duration: 300, useNativeDriver: true, delay: 0 }).start();
-    };
-
-    startProfileSlideUpAnimation = () => {
-        Animated.timing(this.state.profileSlideUpValue, { toValue: 1, duration: 300, useNativeDriver: true, delay: 0 }).start();
-    };
-
-    startProfileSlideDownAnimation = () => {
-        Animated.timing(this.state.profileSlideUpValue, { toValue: 0, duration: 300, useNativeDriver: true, delay: 0 }).start();
-    };
+    closeNavElement = (screenName) => {
+        Animated.timing(this.state[screenName + 'Value'], {
+            toValue: 0,
+            duration: 200
+        }).start()
+    }
 
 }
 
@@ -250,12 +205,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        elevation: 2,
         backgroundColor: 'white'
     },
     bottomBarIconStyle: {
-        width: 30,
-        height: 30
+        width: 20,
+        height: 20
+    },
+    bottomBarText: {
+        color: '#757575',
+        height: 20
+    },
+    bottomBarElement: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 20,
+        padding: 10
     }
 })
 

@@ -141,12 +141,12 @@ const ProductAdd = ({
 		})
 	}
 
-	const typeHandler = ({ target: { value } }) => {
-		setProduct({
-			...product,
-			type: value === 'true',
-		})
-	}
+	// const typeHandler = ({ target: { value } }) => {
+	// 	setProduct({
+	// 		...product,
+	// 		type: value === 'true',
+	// 	})
+	// }
 
 	const unitHandler = ({ target: { value } }) => {
 		setProduct({

@@ -7,7 +7,8 @@
 		"client": "npm start --prefix client",
 		"deploy": "npm run build --prefix client && gcloud app deploy",
 		"dev": "concurrently \"npm run server\" \"npm run client\"",
-		"server": "nodemon server.js"
+		"server": "nodemon server.js",
+		"build": "npm run build --prefix client"
 	},
 	"repository": {
 		"type": "git",

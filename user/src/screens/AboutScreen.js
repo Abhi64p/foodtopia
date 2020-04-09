@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Image, Text, Dimensions, TouchableOpacity } from 'react-native';
 
-const Common = require('../utils/Common');
+import {AppVersion} from '../utils/Common'
 const logoDimension = Dimensions.get('window').width * 0.5;
 
 class AboutScreen extends Component {
@@ -18,7 +18,7 @@ class AboutScreen extends Component {
                         style={{ width: logoDimension, height: logoDimension, alignSelf: 'center'}} />
                     <View style={{ alignItems: 'center' }}>
                         <Text style={{ fontSize: 30 }}>Foodtopia</Text>
-                        <Text>{'v' + Common.appVersion}</Text>
+                        <Text>{'v' + AppVersion}</Text>
                     </View>
                 </View>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>

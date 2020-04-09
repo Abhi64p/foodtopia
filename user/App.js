@@ -6,7 +6,6 @@ import { StyleSheet, Text, } from 'react-native'
 
 import configureStore from './src/utils/store'
 
-import StartScreen from './src/screens/StartScreen'
 import LoginScreen from './src/screens/LoginScreen'
 import LocationScreen from './src/screens/LocationScreen'
 import AboutScreen from './src/screens/AboutScreen'
@@ -25,8 +24,7 @@ class App extends Component {
     return (
       <Provider store={store}>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName='startScreen' headerMode='none'>
-            <Stack.Screen name='startScreen' component={StartScreen} />
+          <Stack.Navigator initialRouteName='loginScreen' headerMode='none'>
             <Stack.Screen name='mainScreen' component={MainScreen} />
             <Stack.Screen name='loginScreen' component={LoginScreen} />
             <Stack.Screen name='locationScreen' component={LocationScreen} />

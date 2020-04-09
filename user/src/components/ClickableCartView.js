@@ -3,6 +3,8 @@ import {
     Text, View, TouchableNativeFeedback, Image, StyleSheet
 } from 'react-native';
 
+import { Server } from '../utils/Common'
+
 class ClickableCartView extends Component {
 
     state = {
@@ -12,7 +14,6 @@ class ClickableCartView extends Component {
     render() {
         const count = this.props.item.count;
         const tmpItem = this.props.item.item;
-        const base = 'data:' + tmpItem.picMime + ';base64,' + tmpItem.pic;
         return (
             <View style={{
                 alignItems: 'center', elevation: this.props.elevation, borderRadius: 5, marginLeft: 10,
@@ -20,7 +21,7 @@ class ClickableCartView extends Component {
             }}>
                 <View style={{ flexDirection: 'row', marginBottom: 10 }}>
                     <Image
-                        source={{ uri: base }}
+                        source={{ uri: Server + '/img/' + tmpItem._id }}
                         resizeMode='contain'
                         style={{ flex: 1 }}
                     />

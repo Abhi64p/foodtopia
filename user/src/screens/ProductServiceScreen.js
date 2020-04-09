@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
-    View, Text, StyleSheet, Image, ScrollView, Modal,
-    TouchableOpacity
+    View, Text, StyleSheet, Image, Modal,
+    TouchableOpacity, FlatList
 } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import LoadingView from '../components/LoadingView'
@@ -44,53 +44,53 @@ class ProductServiceScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.topBar} opacity={(this.state.loadingError || this.state.branchError) ? 0.3 : 1.0}>
-                    <TouchableOpacity style={{ flex: 5 }}
-                        onPress={() => { this.props.navigation.navigate('locationScreen'); }}>
+                <View
+                    style={styles.topBar}
+                    opacity={(this.state.loadingError || this.state.branchError) ? 0.3 : 1.0}
+                >
+                    <TouchableOpacity
+                        style={{ flex: 1 }}
+                        onPress={() => { this.props.navigation.navigate('locationScreen'); }}
+                    >
                         <Text style={{ padding: 10, color: '#1e88e5' }}>{this.props.branchName}</Text>
                     </TouchableOpacity>
-                    <View style={{
-                        flex: 5,
-                        flexDirection: 'row',
-                        justifyContent: 'flex-end',
-                        marginRight: 20
-                    }}>
-                        {
-                            false && <TouchableOpacity>
-                                <Image style={styles.iconStyle} source={require('../icons/search.png')} />
-                            </TouchableOpacity>
-                        }
-                    </View>
+                    <TouchableOpacity
+                        onPress={this.searchPressed}
+                    >
+                        <Image
+                            style={styles.iconStyle}
+                            source={SearchIcon}
+                            resizeMode='contain'
+                        />
+                    </TouchableOpacity>
                 </View>
-                <View style={styles.contents} opacity={(this.state.loadingError || this.state.branchError) ? 0.3 : 1.0}>
-                    <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
-                        <View style={{ flexDirection: 'row', flex: 1, marginRight: 10, alignItems: 'center' }}>
-                            <Text style={styles.subHeading}>Products</Text>
-                            <TouchableOpacity
-                                onPress={this.searchPressed}
-                            >
-                                {/* <Text style={styles.showAllText}>Show All</Text> */}
-                                <Image
-                                    source={SearchIcon}
-                                    resizeMode='contain'
-                                    style={{ width: 35, height: 35 }}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        {
-                            this.state.loading && <LoadingView />
-                        }
-                        {
-                            !this.state.loading && this.state.products.length > 0 && this.state.products.map(this.renderProducts)
-                        }
-                        {
-                            !this.state.loading && this.state.products.length === 0 && <View
-                                style={{ alignItems: 'center', marginTop: 70 }}
-                            >
-                                <Text style={{ fontSize: 17 }}>No Products Available</Text>
-                            </View>
-                        }
-                    </ScrollView>
+                <View
+                    style={styles.contents}
+                    opacity={(this.state.loadingError || this.state.branchError) ? 0.3 : 1.0}
+                >
+                    {
+                        this.state.loading ? (
+                            <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                                <LoadingView />
+                            </View>) : (
+                                this.state.products.length > 0 ? (
+                                    <FlatList
+                                        data={this.state.products}
+                                        renderItem={this.renderProducts}
+                                        keyExtractor={item => item._id}
+                                        contentContainerStyle={{alignItems: 'center'}}
+                                    />
+                                ) : (
+                                        <View
+                                            style={{
+                                                alignItems: 'center', justifyContent: 'center', flex: 1
+                                            }}
+                                        >
+                                            <Text style={{ fontSize: 17 }}>No Products Available</Text>
+                                        </View>
+                                    )
+                            )
+                    }
                 </View>
                 <Modal
                     visible={this.state.loadingError}
@@ -124,12 +124,12 @@ class ProductServiceScreen extends Component {
         );
     }
 
-    renderProducts = (item, index) => {
-        let base = 'data:' + item.picMime + ';base64,' + item.pic;
-        return (
-            <ProductView base={base} item={item} onPress={this.productPressed} key={index} />
-        );
-    }
+    renderProducts = ({ item }) => (
+        <ProductView
+            base={'data:' + item.picMime + ';base64,' + item.pic}
+            item={item}
+            onPress={this.productPressed}
+        />)
 
     productPressed = (item) => {
         this.props.navigation.navigate('productScreen', { item: item });
@@ -182,7 +182,7 @@ class ProductServiceScreen extends Component {
                 let products = []
                 loadedProducts.some(element => {
                     if (branchData.selectedBranchId === element.branch) {
-                            products.push(element)
+                        products.push(element)
                     }
                 })
                 this.setState({ products: products, loading: false, refetchProducts: true })
@@ -209,19 +209,20 @@ const styles = StyleSheet.create({
     contents: {
         width: '100%',
         flex: 10,
+        backgroundColor: 'white'
     },
     topBar: {
         width: '100%',
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        elevation: 2,
         backgroundColor: 'white'
     },
     iconStyle: {
         width: 30,
-        height: 30,
-        padding: 10
+        height: '100%',
+        marginRight: 10,
+        marginLeft: 10
     },
     subHeading: {
         fontWeight: 'bold',

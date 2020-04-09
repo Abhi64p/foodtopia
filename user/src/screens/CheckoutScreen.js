@@ -15,21 +15,24 @@ const Common = require('../utils/Common');
 
 class CheckoutScreen extends Component {
 
-    state = {
-        addressLoading: false,
-        name: "",
-        phoneNumber: "",
-        address: "",
-        pincode: "",
-        nameError: false,
-        addressError: false,
-        pincodeError: false,
-        orderPlacedPopup: false,
-        loadingErrorPopup: false,
-        orderUploading: false,
-        orderUploadingError: false,
-        orderUploadingErrorMsg: undefined,
-        googlePayError: false
+    constructor(props) {
+        super(props)
+        this.state = {
+            addressLoading: false,
+            name: "",
+            phoneNumber: "",
+            address: "",
+            pincode: "",
+            nameError: false,
+            addressError: false,
+            pincodeError: false,
+            orderPlacedPopup: false,
+            loadingErrorPopup: false,
+            orderUploading: false,
+            orderUploadingError: false,
+            orderUploadingErrorMsg: undefined,
+            // googlePayError: false
+        }
     }
 
     componentDidMount() {
@@ -202,15 +205,12 @@ class CheckoutScreen extends Component {
     }
 
     placeOrderPressed = async () => {
-        let name = this.state.name;
-        let address = this.state.address;
-        let pincode = this.state.pincode;
-        let phoneNumber = this.state.phoneNumber;
+        const { name, address, pincode, phoneNumber } = this.state
 
-        let nameError = name.length === 0;
-        let addressError = address.length === 0;
-        let pincodeError = pincode.length === 0;
-        let phoneNumberError = phoneNumber.length === 0;
+        const nameError = name.length === 0;
+        const addressError = address.length === 0;
+        const pincodeError = pincode.length === 0;
+        const phoneNumberError = phoneNumber.length === 0;
 
         this.setState({
             nameError: nameError,
@@ -241,7 +241,7 @@ class CheckoutScreen extends Component {
                         orderUploadingError: true,
                         orderUploadingErrorMsg: name + ' is out of stock. Remove this item and try again!'
                     });
-                else 
+                else
                     this.setState({
                         orderUploading: false
                     })
@@ -254,7 +254,13 @@ class CheckoutScreen extends Component {
     loadAddress = async () => {
         this.setState({ addressLoading: true, loadingErrorPopup: false });
         let user = await Common.fetchJSON('mauth', {}, 'GET');
-        if (user != null)
+        if (user != null) {
+            if (!user.name)
+                user.name = ''
+            if (!user.address)
+                user.address = ''
+            if (!user.pincode)
+                user.pincode = ''
             this.setState({
                 addressLoading: false,
                 phoneNumber: user.phoneNumber,
@@ -262,6 +268,7 @@ class CheckoutScreen extends Component {
                 address: user.address,
                 pincode: user.pincode
             });
+        }
         else
             this.setState({ addressLoading: false, loadingErrorPopup: true });
     }
@@ -314,8 +321,8 @@ class CheckoutScreen extends Component {
             delete element.item.branch;
             delete element.item.description;
             delete element.item.__v;
-            delete element.item.pic;
-            delete element.item.picMime;
+            // delete element.item.pic;
+            // delete element.item.picMime;
             cleanedProducts.push(element);
         });
         return cleanedProducts;

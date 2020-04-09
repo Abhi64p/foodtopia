@@ -2,9 +2,9 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { CommonActions } from '@react-navigation/native';
 import VerifyPhoneNum from './VerifyPhoneNum';
 
-const Server = "http://192.168.1.37:5000/api/";
-// const Server = "https://foodtopia20.appspot.com/api/";
-const AppVersion = "1.0.0";
+export const Server = "http://192.168.1.37:5000";
+// export const Server = "https://fudtopia.el.r.appspot.com";
+export const AppVersion = "1.0.0";
 
 const readToken = async () => {
     try {
@@ -16,12 +16,12 @@ const readToken = async () => {
     }
 }
 
-const fetchJSON = async (apiName, body = {}, method = 'POST') => {
+export const fetchJSON = async (apiName, body = {}, method = 'POST') => {
     let token = await readToken();
     if (token == null)
         token = '';
     try {
-        let response = await fetch(Server + AppVersion + '/' + apiName,
+        let response = await fetch(Server + '/api/'+ AppVersion + '/' + apiName,
             {
                 method,
                 headers: {
@@ -55,7 +55,7 @@ const fetchJSON = async (apiName, body = {}, method = 'POST') => {
     }
 }
 
-const logout = async (navigation) => {
+export const logout = async (navigation) => {
     const keys = await AsyncStorage.getAllKeys();
     VerifyPhoneNum.signOut();
     await AsyncStorage.multiRemove(keys);
@@ -64,7 +64,3 @@ const logout = async (navigation) => {
         routes: [{ name: 'loginScreen' }]
     }));
 }
-
-exports.fetchJSON = fetchJSON;
-exports.appVersion = AppVersion;
-exports.logout = logout;

@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import LoadingView from '../components/LoadingView';
 
-const Common = require('../utils/Common');
+import { logout } from '../utils/Common'
 
 class ProfileScreen extends Component {
 
@@ -37,58 +37,70 @@ class ProfileScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={[styles.topBar, { elevation: this.getElevation() }]}
-                    opacity={this.getOpacity()}>
+                <View
+                    style={styles.topBar}
+                    opacity={this.getOpacity()}
+                >
                     <View style={{ flexDirection: 'row', flex: 1 }}>
-                        <Text style={{ fontSize: 17, fontWeight: 'bold', marginLeft: 10 }}>Profile</Text>
+                        <Text
+                            style={{
+                                fontSize: 17, fontWeight: 'bold', marginLeft: 10,
+                                color: '#212121'
+                            }}
+                        >Profile</Text>
                     </View>
-                    <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'flex-end', marginRight: 10 }}>
-                        <TouchableOpacity onPress={this.aboutPressed}>
-                            <Image source={require('../icons/info.png')} resizeMode='contain' style={{ width: 30, padding: 10 }} />
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity onPress={this.editMenuPressed}>
+                        <Image
+                            source={require('../icons/edit.png')}
+                            resizeMode='contain'
+                            style={styles.topBarIcon}
+                        />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={this.aboutPressed}>
+                        <Image
+                            source={require('../icons/info.png')}
+                            resizeMode='contain'
+                            style={styles.topBarIcon} />
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.contents} opacity={this.getOpacity()}>
-                    <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
-                        <Image source={require('../icons/photo.png')} resizeMode='contain'
-                            style={{ width: '90%', height: '90%' }} />
-                    </View>
                     {
-                        !this.state.loading && <View style={{ flex: 1, alignItems: 'center', marginBottom: 20 }}>
-                            <View style={{ flex: 4, marginLeft: 20, width: '90%' }}>
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-                                    <Text style={{ flex: 2 }}>Phone:</Text>
-                                    <Text style={{ flex: 4 }}>{this.state.loadedPhone}</Text>
-                                    <Text style={{ flex: 1 }} />
+                        !this.state.loading && <>
+                            <View
+                                style={{ flex: 1, paddingLeft: 30, width: '100%', paddingTop: 10}}
+                            >
+                                <View style={styles.detailsRow}>
+                                    <Text style={{ flex: 2, fontSize: 17 }}>Phone:</Text>
+                                    <Text style={{ flex: 4, fontSize: 17 }}>{this.state.loadedPhone}</Text>
                                 </View>
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-                                    <Text style={{ flex: 2 }}>Name:</Text>
-                                    <Text style={{ flex: 4 }}>{this.state.loadedName}</Text>
-                                    <TouchableOpacity style={{ flex: 1 }} onPress={this.editMenuPressed}>
-                                        <Image source={require('../icons/edit.png')} resizeMode='contain'
-                                            style={{ width: 30, height: 30, padding: 10 }} />
-                                    </TouchableOpacity>
+                                <View style={styles.detailsRow}>
+                                    <Text style={{ flex: 2, fontSize: 17 }}>Name:</Text>
+                                    <Text style={{ flex: 4, fontSize: 17 }}>{this.state.loadedName}</Text>
                                 </View>
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-                                    <Text style={{ flex: 2 }}>Address:</Text>
-                                    <Text style={{ flex: 4 }}>{this.state.loadedAddress}</Text>
-                                    <Text style={{ flex: 1 }} />
+                                <View style={styles.detailsRow}>
+                                    <Text style={{ flex: 2, fontSize: 17 }}>Address:</Text>
+                                    <Text style={{ flex: 4, fontSize: 17 }}>{this.state.loadedAddress}</Text>
                                 </View>
-                                <View style={{ flexDirection: 'row', flex: 1, justifyContent: 'center' }}>
-                                    <Text style={{ flex: 2 }}>Pincode:</Text>
-                                    <Text style={{ flex: 4 }}>{this.state.loadedPincode}</Text>
-                                    <Text style={{ flex: 1 }} />
+                                <View style={styles.detailsRow}>
+                                    <Text style={{ flex: 2, fontSize: 17 }}>Pincode:</Text>
+                                    <Text style={{ flex: 4, fontSize: 17 }}>{this.state.loadedPincode}</Text>
                                 </View>
                             </View>
-                            <TouchableNativeFeedback style={{ flex: 1 }} onPress={() => { this.setState({ logoutPopup: true }); }}>
-                                <View style={{
-                                    width: '60%', height: 40, backgroundColor: '#f44336', borderRadius: 5,
-                                    alignItems: 'center', justifyContent: 'center'
-                                }}>
-                                    <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>Logout</Text>
+                            <TouchableNativeFeedback
+                                onPress={() => { this.setState({ logoutPopup: true }); }}
+                            >
+                                <View
+                                    style={{
+                                        width: '60%', height: 40, backgroundColor: '#f44336', borderRadius: 5,
+                                        alignItems: 'center', justifyContent: 'center'
+                                    }}
+                                >
+                                    <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                                        Logout
+                                        </Text>
                                 </View>
                             </TouchableNativeFeedback>
-                        </View>
+                        </>
                     }
                     {
                         this.state.loading && <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -228,7 +240,6 @@ class ProfileScreen extends Component {
             }, 'PUT');
 
         if (responseJSON != null) {
-            console.log(responseJSON);
             this.setState({
                 showEditMenu: false,
                 updating: false,
@@ -267,7 +278,7 @@ class ProfileScreen extends Component {
 
     logout = async () => {
         await this.setState({ logoutPopup: false })
-        Common.logout(this.props.navigation);
+        logout(this.props.navigation);
     }
 
     getOpacity = () => {
@@ -294,11 +305,12 @@ class ProfileScreen extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fafafa'
+        backgroundColor: 'white'
     },
     contents: {
         width: '100%',
-        flex: 10
+        flex: 10,
+        alignItems: 'center'
     },
     topBar: {
         width: '100%',
@@ -306,6 +318,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: 'white'
+    },
+    topBarIcon: {
+        width: 30,
+        height: '100%',
+        marginRight: 10
+    },
+    detailsRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10
     }
 })
 

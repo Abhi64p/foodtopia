@@ -21,9 +21,9 @@ router.post('/', auth, async (req, res) => {
 
             let products;
             if (branchId === undefined)
-                products = await Product.find();
+                products = await Product.find({}, '-pic -picMime')
             else
-                products = await Product.find({ branch: branchId });
+                products = await Product.find({ branch: branchId },  '-pic -picMime')
 
             res.json(products);
         }

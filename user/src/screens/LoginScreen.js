@@ -1,140 +1,190 @@
 import React, { Component } from 'react';
 import {
     View, Text, TouchableNativeFeedback, TextInput, Modal, TouchableOpacity,
-    Animated, Dimensions, Image, BackHandler
+    Animated, Image, BackHandler
 } from 'react-native';
-import CardView from 'react-native-cardview';
 import AsyncStorage from '@react-native-community/async-storage';
 import { CommonActions } from '@react-navigation/native';
-import VerifyPhoneNum from '../utils/VerifyPhoneNum';
-import LoadingView from '../components/LoadingView';
+import messaging, { firebase } from '@react-native-firebase/messaging'
 import { connect } from 'react-redux';
 
-const Common = require('../utils/Common');
+import { updateFCMToken } from '../actions/settingsActions'
+import AndroidNotification from '../utils/AndroidNotification'
+import VerifyPhoneNum from '../utils/VerifyPhoneNum';
+import LoadingView from '../components/LoadingView';
+import { fetchJSON } from '../utils/Common'
+import AppLogo from '../icons/logo.png'
 
 class LoginScreen extends Component {
 
-    state = {
-        phoneNumber: "",
-        otp: "",
-        phoneNumberError: false,
-        otpError: false,
-        showPhoneNumberInput: true,
-        exitTransitionValue: new Animated.Value(1),
-        entryTransitionValue: new Animated.Value(0),
-        popupVisible: false,
-        popupText: '',
-        statusText: '',
-        verifying: false
+    constructor(props) {
+        super(props)
+        this.state = {
+            phoneNumber: "",
+            otp: "",
+            phoneNumberError: false,
+            otpError: false,
+            showPhoneNumberInput: true,
+            exitTransitionValue: new Animated.Value(1),
+            entryTransitionValue: new Animated.Value(0),
+            popupVisible: false,
+            popupText: '',
+            statusText: '',
+            verifying: false,
+            fadeInBottom: new Animated.Value(0)
+        }
+    }
+
+    componentDidMount() {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+        this.initFirebase()
+    }
+
+    componentWillUnmount() {
+        this.backHandler.remove()
     }
 
     render() {
-        let lineY = 2 * Dimensions.get('window').height / 5;
         return (
-            <View style={{ flex: 1, borderTopColor: '#1e88e5', alignItems: 'center', borderTopWidth: lineY }}>
-                <View style={{ transform: [{ translateY: -3 * lineY / 4 }], alignItems: 'center', justifyContent: 'center' }}
-                    opacity={this.state.popupVisible ? 0.3 : 1.0}>
-                    <Text
-                        style={{
-                            height: 120, textAlignVertical: 'center', fontSize: 30, color: 'white', fontWeight: 'bold'
-                        }}
-                    >
-                        Foodtopia
-                        </Text>
+            <>
+                <View
+                    style={{
+                        flex: 1, backgroundColor: 'white', alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <Image
+                        style={{ width: '50%', height: '50%' }}
+                        source={AppLogo}
+                        resizeMode='contain'
+                    />
                 </View>
-                <CardView cardElevation={this.state.popupVisible ? 0 : 5} cornerRadius={5} opacity={this.state.popupVisible ? 0.5 : 1.0}
-                    style={{ width: '80%', height: '60%', transform: [{ translateY: -2 * lineY / 3 }] }}>
-                    {this.state.showPhoneNumberInput && <Animated.View style={{
-                        alignItems: 'center', justifyContent: 'center', width: '100%', flex: 1,
-                        opacity: this.state.exitTransitionValue.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
-                        transform: [{ translateX: this.state.exitTransitionValue.interpolate({ inputRange: [0, 1], outputRange: [-100, 0] }) }]
-                    }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 35, color: '#1e88e5', marginBottom: 20 }}>Sign Up</Text>
-                        <Text style={{ color: 'grey' }}>Enter Phone Number</Text>
-                        <View style={{ flexDirection: 'row', marginTop: 20 }}>
-                            <Text style={{
-                                borderBottomColor: this.state.phoneNumberError ? '#e53935' : '#64b5f6', width: '20%',
-                                paddingRight: 5, textAlignVertical: 'center', borderBottomWidth: 1, textAlign: 'right'
-                            }}>+91</Text>
-                            <TextInput style={{
-                                width: '40%', height: 50, borderBottomWidth: 1, textAlign: 'left', backgroundColor: 'white',
-                                fontSize: 15, borderBottomColor: this.state.phoneNumberError ? '#e53935' : '#64b5f6'
-                            }} placeholder='Phone Number' defaultValue={this.state.phoneNumber} keyboardType='numeric'
-                                onChangeText={(text) => { this.state.phoneNumber = text; }}
-                            />
-                        </View>
-                    </Animated.View>}
-                    {!this.state.showPhoneNumberInput && <Animated.View style={{
-                        width: '100%', flex: 1,
-                        opacity: this.state.entryTransitionValue.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }),
-                        transform: [{ translateX: this.state.entryTransitionValue.interpolate({ inputRange: [0, 1], outputRange: [100, 0] }) }]
-                    }}>
-                        <View style={{ width: 30, height: 30, marginLeft: 20, marginTop: 20 }}>
-                            <TouchableNativeFeedback onPress={this.backPressed}>
-                                <View style={{ width: 30, height: 30 }}>
-                                    <Image source={require('../icons/back.png')} style={{ width: 25, height: 25 }} resizeMode='contain' />
-                                </View>
-                            </TouchableNativeFeedback>
-                        </View>
-                        <View style={{ width: '100%', alignItems: 'center', justifyContent: 'center', height: '100%', position: 'absolute' }}>
-                            <Text style={{ color: 'grey' }}>Enter OTP</Text>
-                            <TextInput style={{
-                                width: '70%', height: 50, borderBottomWidth: 1, textAlign: 'center', backgroundColor: 'white',
-                                fontSize: 15, borderBottomColor: this.state.otpError ? '#e53935' : '#64b5f6', marginTop: 20
-                            }} placeholder='OTP' onChangeText={(text) => { this.state.otp = text }} keyboardType="numeric"
+                <Animated.View
+                    style={{
+                        backgroundColor: 'white', alignItems: 'center',
+                        opacity: this.state.popupVisible ? 0.5 : (
+                            this.state.fadeInBottom.interpolate({
+                                inputRange: [0, 1], outputRange: [0, 1]
+                            })
+                        ),
+                        height: this.state.fadeInBottom.interpolate({
+                            inputRange: [0, 1], outputRange: [0, 170]
+                        })
+                    }}
+                >
+                    {
+                        this.state.showPhoneNumberInput &&
+                        <Animated.View
+                            style={{
+                                alignItems: 'center', width: '100%',
+                                opacity: this.state.exitTransitionValue.interpolate({
+                                    inputRange: [0, 1], outputRange: [0, 1]
+                                }),
+                                transform: [{
+                                    translateX: this.state.exitTransitionValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [-100, 0]
+                                    })
+                                }]
+                            }}
+                        >
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text
+                                    style={{
+                                        borderBottomColor: this.state.phoneNumberError ? '#e53935' : '#25b7d3',
+                                        width: '20%', paddingRight: 5, textAlignVertical: 'center',
+                                        borderBottomWidth: 1, textAlign: 'right'
+                                    }}
+                                >+91
+                                </Text>
+                                <TextInput
+                                    style={{
+                                        width: '40%', height: 50, borderBottomWidth: 1,
+                                        textAlign: 'left', fontSize: 15,
+                                        borderBottomColor: this.state.phoneNumberError ? '#e53935' : '#25b7d3'
+                                    }}
+                                    placeholder='Phone Number'
+                                    defaultValue={this.state.phoneNumber}
+                                    keyboardType='numeric'
+                                    onChangeText={(text) => { this.state.phoneNumber = text; }}
+                                />
+                            </View>
+                        </Animated.View>
+                    }
+                    {
+                        !this.state.showPhoneNumberInput &&
+                        <Animated.View
+                            style={{
+                                width: '100%', alignItems: 'center',
+                                opacity: this.state.entryTransitionValue.interpolate({
+                                    inputRange: [0, 1], outputRange: [0, 1]
+                                }),
+                                transform: [{
+                                    translateX: this.state.entryTransitionValue.interpolate({
+                                        inputRange: [0, 1], outputRange: [100, 0]
+                                    })
+                                }]
+                            }}
+                        >
+                            <TextInput
+                                style={{
+                                    width: '70%', height: 50, borderBottomWidth: 1,
+                                    textAlign: 'center', fontSize: 15,
+                                    borderBottomColor: this.state.otpError ? '#e53935' : '#25b7d3'
+                                }}
+                                placeholder='OTP'
+                                onChangeText={(text) => { this.state.otp = text }}
+                                keyboardType="numeric"
                                 defaultValue={this.state.otp} />
-                        </View>
-                    </Animated.View>}
-                </CardView>
-                <View opacity={this.state.popupVisible ? 0.3 : 1.0}
-                    style={{ alignItems: 'center', justifyContent: 'center', transform: [{ translateY: -2 * lineY / 5 }] }}>
-                    <Text>{this.state.statusText}</Text>
-                </View>
-                <View style={{ alignItems: 'center', position: 'absolute', bottom: 5 }}
-                    opacity={this.state.popupVisible ? 0.3 : 1.0}>
-                    <TouchableNativeFeedback onPress={this.continuePressed} disabled={this.state.verifying}>
+                        </Animated.View>
+                    }
+                    <Text style={{ margin: 10 }}> {this.state.statusText} </Text>
+                    <TouchableNativeFeedback
+                        onPress={this.continuePressed}
+                        disabled={this.state.verifying}>
                         <View style={{
                             alignItems: 'center', justifyContent: 'center', width: 250, height: 50,
-                            borderRadius: 20, backgroundColor: '#1e88e5'
+                            borderRadius: 20, backgroundColor: '#25b7d3'
                         }}>
                             {
-                                !this.state.verifying && <Text style={{ fontSize: 15, color: 'white' }}>
-                                    {this.state.showPhoneNumberInput ? 'Continue' : 'Verify'}
-                                </Text>
-                            }
-                            {
-                                this.state.verifying && <LoadingView color='white' />
+                                this.state.verifying ? (<LoadingView color='white' />) : (
+                                    <Text style={{ fontSize: 15, color: 'white' }}>
+                                        {this.state.showPhoneNumberInput ? 'Continue' : 'Verify'}
+                                    </Text>
+                                )
                             }
                         </View>
                     </TouchableNativeFeedback>
-                    <Text style={{ padding: 10, fontSize: 10 }}>Before using the app, you must VERIFY your phone number</Text>
-                </View>
+                    <Text style={{ padding: 10, fontSize: 10 }}>
+                        Before using the app, you must VERIFY your phone number
+                    </Text>
+                </Animated.View>
                 <Modal
                     visible={this.state.popupVisible}
                     transparent={true}
                     animationType={"fade"}>
                     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-                        <View style={{
-                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%', elevation: 5,
-                            borderRadius: 10, borderWidth: 2, backgroundColor: 'white', borderColor: 'white'
-                        }}>
-                            <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>{this.state.popupText}</Text>
-                            <TouchableOpacity style={{ flex: 1, justifyContent: 'center' }} onPress={this.popupDismiss}>
-                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>Try again?</Text>
+                        <View
+                            style={{
+                                alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%',
+                                elevation: 5, borderRadius: 10, borderWidth: 2, backgroundColor: 'white',
+                                borderColor: 'white'
+                            }}>
+                            <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>
+                                {this.state.popupText}
+                            </Text>
+                            <TouchableOpacity
+                                style={{ flex: 1, justifyContent: 'center' }}
+                                onPress={this.popupDismiss}
+                            >
+                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>
+                                    Try again?
+                                </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
                 </Modal>
-            </View >
+            </>
         );
-    }
-
-    componentDidMount() {
-        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-    }
-
-    componentWillUnmount() {
-        this.backHandler.remove()
     }
 
     handleBackPress = () => {
@@ -173,9 +223,13 @@ class LoginScreen extends Component {
                     }
                 });
                 this.setState({ phoneNumberError: false });
-                Animated.timing(this.state.exitTransitionValue, { toValue: 0, duration: 100, useNativeDriver: true, delay: 0 }).start((result) => {
+                Animated.timing(this.state.exitTransitionValue, {
+                    toValue: 0, duration: 100, useNativeDriver: true, delay: 0
+                }).start((result) => {
                     this.setState({ showPhoneNumberInput: false });
-                    Animated.timing(this.state.entryTransitionValue, { toValue: 1, duration: 100, useNativeDriver: true, delay: 0 }).start();
+                    Animated.timing(this.state.entryTransitionValue, {
+                        toValue: 1, duration: 100, useNativeDriver: true, delay: 0
+                    }).start();
                 });
             }
         }
@@ -212,14 +266,18 @@ class LoginScreen extends Component {
     }
 
     backPressed = () => {
-        Animated.timing(this.state.entryTransitionValue, { toValue: 0, duration: 100, useNativeDriver: true, delay: 0 }).start((result) => {
+        Animated.timing(this.state.entryTransitionValue, {
+            toValue: 0, duration: 100, useNativeDriver: true, delay: 0
+        }).start((result) => {
             this.setState({ showPhoneNumberInput: true });
-            Animated.timing(this.state.exitTransitionValue, { toValue: 1, duration: 100, useNativeDriver: true, delay: 0 }).start(this.startEntryAnimation);
+            Animated.timing(this.state.exitTransitionValue, {
+                toValue: 1, duration: 100, useNativeDriver: true, delay: 0
+            }).start(this.startEntryAnimation);
         });
     }
 
     login = async () => {
-        let responseJSON = await Common.fetchJSON('mauth', {
+        let responseJSON = await fetchJSON('mauth', {
             phoneNumber: this.state.phoneNumber,
             fcmToken: this.props.fcmToken
         });
@@ -246,12 +304,65 @@ class LoginScreen extends Component {
         this.login();
     }
 
-}
-
-const mapStateToProps = (state) => {
-    return {
-        fcmToken: state.settings.fcmToken
+    startFadeInAnim = () => {
+        Animated.timing(this.state.fadeInBottom, {
+            toValue: 1, duration: 300, delay: 300
+        }).start()
     }
+
+    checkLoginStatus = async () => {
+        try {
+            let isLoggedIn = await AsyncStorage.getItem("isLoggedIn")
+
+            if (isLoggedIn === null)
+                isLoggedIn = "false"
+
+            if (isLoggedIn === "true")
+                this.props.navigation.dispatch(CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'mainScreen' }]
+                }))
+            else
+                this.startFadeInAnim()
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    initFirebase = async () => {
+        await messaging().registerDeviceForRemoteMessages()
+        await this.getMessagingToken()
+        this.receiveForegroundMessages()
+        this.receiveBackgroundMessages()
+    }
+
+    receiveForegroundMessages = () => {
+        messaging().onMessage(async remoteMessage => {
+            const { title, message } = remoteMessage.data
+            AndroidNotification.showNotification(title, message)
+        })
+    }
+
+    receiveBackgroundMessages = () => {
+        messaging().setBackgroundMessageHandler(async remoteMessage => {
+            console.log('Background Message Received', remoteMessage)
+        })
+    }
+
+    getMessagingToken = async () => {
+        const fcmToken = await firebase.messaging().getToken()
+        this.props.updateFcmToken(fcmToken)
+        this.checkLoginStatus()
+    }
+
 }
 
-export default connect(mapStateToProps)(LoginScreen);
+const mapStateToProps = (state) => ({
+    fcmToken: state.settings.fcmToken
+})
+
+const mapDispatchToProps = (dispatch) => ({
+    updateFcmToken: (fcmToken) => dispatch(updateFCMToken(fcmToken))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);

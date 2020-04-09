@@ -52,7 +52,7 @@ class StartScreen extends Component {
     }
 
     registerAppWithFCM = async () => {
-        await messaging().registerForRemoteNotifications()
+        await messaging().registerDeviceForRemoteMessages()
     }
 
     receiveForegroundMessages = () => {
