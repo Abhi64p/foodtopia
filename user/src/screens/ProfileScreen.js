@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import LoadingView from '../components/LoadingView';
 
-import { logout } from '../utils/Common'
+import { logout, fetchJSON } from '../utils/Common'
 
 class ProfileScreen extends Component {
 
@@ -41,14 +41,12 @@ class ProfileScreen extends Component {
                     style={styles.topBar}
                     opacity={this.getOpacity()}
                 >
-                    <View style={{ flexDirection: 'row', flex: 1 }}>
-                        <Text
-                            style={{
-                                fontSize: 17, fontWeight: 'bold', marginLeft: 10,
-                                color: '#212121'
-                            }}
-                        >Profile</Text>
-                    </View>
+                    <Text style={{
+                        fontSize: 17, fontWeight: 'bold', marginLeft: 10,
+                        color: '#212121', flex: 1
+                    }}>
+                        Profile
+                    </Text>
                     <TouchableOpacity onPress={this.editMenuPressed}>
                         <Image
                             source={require('../icons/edit.png')}
@@ -67,7 +65,7 @@ class ProfileScreen extends Component {
                     {
                         !this.state.loading && <>
                             <View
-                                style={{ flex: 1, paddingLeft: 30, width: '100%', paddingTop: 10}}
+                                style={{ flex: 1, paddingLeft: 30, width: '100%', paddingTop: 10 }}
                             >
                                 <View style={styles.detailsRow}>
                                     <Text style={{ flex: 2, fontSize: 17 }}>Phone:</Text>
@@ -232,7 +230,7 @@ class ProfileScreen extends Component {
     }
 
     updateDetails = async () => {
-        let responseJSON = await Common.fetchJSON('mauth',
+        let responseJSON = await fetchJSON('mauth',
             {
                 name: this.state.name,
                 address: this.state.address,
@@ -263,7 +261,7 @@ class ProfileScreen extends Component {
 
     loadContents = async () => {
         this.setState({ loadingError: false, loading: true });
-        let user = await Common.fetchJSON('mauth', {}, 'GET');
+        let user = await fetchJSON('mauth', {}, 'GET');
         if (user != null)
             this.setState({
                 loading: false,

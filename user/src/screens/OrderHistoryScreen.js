@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import LoadingView from '../components/LoadingView';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import OrderHistoryCardView from '../components/OrderHistoryCardView';
 import { connect } from 'react-redux'
 
@@ -36,9 +36,10 @@ class OrderHistoryScreen extends Component {
                     <Text
                         style={{
                             fontSize: 17, fontWeight: 'bold', marginLeft: 10,
-                            color: '#212121'
-                        }}
-                    >Order History</Text>
+                            color: '#212121', flex: 1
+                        }}>
+                        Order History
+                    </Text>
                 </View>
                 <View style={styles.contents} opacity={this.state.cancelPopup ? 0.3 : 1.0}>
                     {

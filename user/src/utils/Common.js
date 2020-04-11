@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-community/async-storage'
-import { CommonActions } from '@react-navigation/native';
-import VerifyPhoneNum from './VerifyPhoneNum';
+import { CommonActions } from '@react-navigation/native'
+import auth from '@react-native-firebase/auth'
 
-export const Server = "http://192.168.1.37:5000";
-// export const Server = "https://fudtopia.el.r.appspot.com";
+// export const Server = "http://192.168.1.37:5000";
+ export const Server = "https://fudtopia.el.r.appspot.com";
 export const AppVersion = "1.0.0";
 
 const readToken = async () => {
@@ -57,8 +57,8 @@ export const fetchJSON = async (apiName, body = {}, method = 'POST') => {
 
 export const logout = async (navigation) => {
     const keys = await AsyncStorage.getAllKeys();
-    VerifyPhoneNum.signOut();
     await AsyncStorage.multiRemove(keys);
+    await auth().signOut()
     navigation.dispatch(CommonActions.reset({
         index: 0,
         routes: [{ name: 'loginScreen' }]

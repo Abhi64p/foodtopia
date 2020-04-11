@@ -39,22 +39,33 @@ class LocationScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.topBar} opacity={this.state.popupVisible ? 0.3 : 1.0}>
+                <View
+                    style={styles.topBar}
+                    opacity={this.state.popupVisible ? 0.3 : 1.0}
+                >
                     <Text style={{ fontSize: 17, flex: 1, marginLeft: 20 }}>Select Branch</Text>
-                    <View style={{ justifyContent: 'flex-end', alignItems: 'center', flex: 1, flexDirection: 'row' }}>
-                        <TouchableOpacity style={{ marginRight: 10 }} onPress={this.saveBranch}>
+                    <View
+                        style={{
+                            justifyContent: 'flex-end', alignItems: 'center', flex: 1, flexDirection: 'row'
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={{ marginRight: 10 }}
+                            onPress={this.saveBranch}
+                        >
                             <View style={{
-                                alignItems: 'center', justifyContent: 'center', width: 50, height: 30, borderColor: '#1e88e5',
-                                borderRadius: 2, borderWidth: 1
+                                alignItems: 'center', justifyContent: 'center', width: 50, height: 30,
+                                borderColor: '#25b7d3', borderRadius: 2, borderWidth: 1
                             }}>
-                                <Text style={{ color: '#1e88e5', fontWeight: 'bold' }}>Save</Text>
+                                <Text style={{ color: '#25b7d3', fontWeight: 'bold' }}>Save</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.contents} opacity={this.state.popupVisible ? 0.3 : 1.0}>
                     {
-                        this.state.isBranchesLoaded && <FlatList
+                        this.state.isBranchesLoaded &&
+                        <FlatList
                             data={this.state.branches}
                             renderItem={this.renderItem}
                             keyExtractor={item => item._id}
@@ -63,7 +74,10 @@ class LocationScreen extends Component {
                         />
                     }
                     {
-                        !this.state.isBranchesLoaded && <View style={{ justifyContent: 'center', flex: 1 }}><LoadingView /></View>
+                        !this.state.isBranchesLoaded &&
+                        <View style={{ justifyContent: 'center', flex: 1 }}>
+                            <LoadingView />
+                        </View>
                     }
                 </View>
                 <Modal
@@ -72,12 +86,19 @@ class LocationScreen extends Component {
                     animationType={"fade"}>
                     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                         <View style={{
-                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%', elevation: 5,
-                            borderRadius: 10, borderWidth: 2, backgroundColor: 'white', borderColor: 'white'
+                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%',
+                            elevation: 5, borderRadius: 10, borderWidth: 2, backgroundColor: 'white',
+                            borderColor: 'white'
                         }}>
-                            <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>{this.state.popupText}</Text>
-                            <TouchableOpacity style={{ flex: 1, justifyContent: 'center' }} onPress={this.popupDismiss}>
-                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>Okay</Text>
+                            <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>
+                                {this.state.popupText}
+                            </Text>
+                            <TouchableOpacity
+                                style={{ flex: 1, justifyContent: 'center' }}
+                                onPress={this.popupDismiss}>
+                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>
+                                    Okay
+                                </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -94,7 +115,7 @@ class LocationScreen extends Component {
                 value={item}
                 width={widthGlobal * 0.8}
                 height={heightGlobal * 0.3}
-                borderColor={selected ? '#1e88e5' : 'gray'}
+                borderColor={selected ? '#25b7d3' : 'gray'}
                 borderWidth={selected ? 2 : 1}
             />
         );

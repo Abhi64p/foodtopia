@@ -52,7 +52,7 @@ class ProductServiceScreen extends Component {
                         style={{ flex: 1 }}
                         onPress={() => { this.props.navigation.navigate('locationScreen'); }}
                     >
-                        <Text style={{ padding: 10, color: '#1e88e5' }}>{this.props.branchName}</Text>
+                        <Text style={{ padding: 10, color: '#25b7d3' }}>{this.props.branchName}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={this.searchPressed}

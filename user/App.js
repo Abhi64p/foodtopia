@@ -15,6 +15,7 @@ import CheckoutScreen from './src/screens/CheckoutScreen'
 import OneTimeProfileScreen from './src/screens/OneTimeProfileScreen'
 import ProductSearchScreen from './src/screens/ProductSearchScreen'
 import OrderScreen from './src/screens/OrderScreen'
+import QRCodeScreen from './src/screens/QRCodeScreen'
 
 const store = configureStore();
 const Stack = createStackNavigator();
@@ -34,6 +35,7 @@ class App extends Component {
             <Stack.Screen name='oneTimeProfileScreen' component={OneTimeProfileScreen} />
             <Stack.Screen name='productSearchScreen' component={ProductSearchScreen}/>
             <Stack.Screen name='orderScreen' component={OrderScreen}/>
+            <Stack.Screen name='qRCodeScreen' component={QRCodeScreen}/>
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

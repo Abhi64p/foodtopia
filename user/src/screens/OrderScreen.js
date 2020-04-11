@@ -3,11 +3,13 @@ import {
     View, Text, StyleSheet, Modal, TouchableOpacity, Image,
     ScrollView, TouchableNativeFeedback
 } from 'react-native';
-import LoadingView from '../components/LoadingView';
 import { connect } from 'react-redux'
 
+import LoadingView from '../components/LoadingView';
 import { resetOrderHistory } from '../actions/orderActions'
-const Common = require('../utils/Common');
+import { fetchJSON } from '../utils/Common'
+import BackIcon from '../icons/back.png'
+
 
 class OrderScreen extends Component {
 
@@ -25,9 +27,19 @@ class OrderScreen extends Component {
                 <View style={styles.topBar}>
                     <TouchableOpacity onPress={this.props.navigation.goBack}>
                         <Image
-                            source={require('../icons/back.png')}
+                            source={BackIcon}
                             style={{ width: 25, height: '100%', marginLeft: 10, marginRight: 10 }}
-                            resizeMode='contain' />
+                            resizeMode='contain'
+                        />
+                    </TouchableOpacity>
+                    <View style={{ flex: 1 }} />
+                    <TouchableOpacity onPress={this.showQRCode}>
+                        <Text style={{
+                            color: '#1e88e5', paddingRight: 10, height: '100%',
+                            textAlignVertical: 'center'
+                        }}>
+                            Show QR Code
+                        </Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.contents} opacity={this.state.cancelPopup ? 0.3 : 1.0}>
@@ -50,7 +62,7 @@ class OrderScreen extends Component {
                             order.items.map(this.renderSubItems)
                         }
                     </ScrollView>
-                    {   
+                    {
                         order.status === 'Pending Payment' &&
                         <View
                             style={{
@@ -167,7 +179,7 @@ class OrderScreen extends Component {
     cancelOrderConfirmed = async () => {
         this.setState({ cancelling: true });
         const { _id } = this.props.route.params.order
-        let responseJSON = await Common.fetchJSON('morder', { id: _id }, 'PUT');
+        let responseJSON = await fetchJSON('morder', { id: _id }, 'PUT');
         if (responseJSON !== null) {
             if (responseJSON.status === "order-cancelled") {
                 this.setState({ cancelling: false, cancelFailed: false, cancelComplete: true });
@@ -211,6 +223,12 @@ class OrderScreen extends Component {
                 </Text>
             </View>
         )
+    }
+
+    showQRCode = () => {
+        this.props.navigation.navigate('qRCodeScreen', {
+            orderId: this.props.route.params.order._id
+        })
     }
 
 }

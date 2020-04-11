@@ -6,6 +6,7 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 import { CommonActions } from '@react-navigation/native';
 import messaging, { firebase } from '@react-native-firebase/messaging'
+import auth from '@react-native-firebase/auth';
 import { connect } from 'react-redux';
 
 import { updateFCMToken } from '../actions/settingsActions'
@@ -31,7 +32,8 @@ class LoginScreen extends Component {
             popupText: '',
             statusText: '',
             verifying: false,
-            fadeInBottom: new Animated.Value(0)
+            fadeInBottom: new Animated.Value(0),
+            confirmation: undefined
         }
     }
 
@@ -209,28 +211,35 @@ class LoginScreen extends Component {
             if (error)
                 this.setState({ phoneNumberError: true });
             else {
-                VerifyPhoneNum.sendOTP(phoneNumber, (result, code) => {
-                    switch (result) {
-                        case 'OTP_DETECTED':
-                            this.setState({ otp: code, otpError: false, statusText: "" });
-                            this.continuePressed();
-                            break;
-                        case 'OTP_SENT':
-                            this.setState({ statusText: "OTP send to +91 " + this.state.phoneNumber });
-                            break;
-                        case 'OTP_FAILED': this.setState({ statusText: "Failed to send OTP, try again." });
-                            break;
-                    }
-                });
-                this.setState({ phoneNumberError: false });
-                Animated.timing(this.state.exitTransitionValue, {
-                    toValue: 0, duration: 100, useNativeDriver: true, delay: 0
-                }).start((result) => {
-                    this.setState({ showPhoneNumberInput: false });
-                    Animated.timing(this.state.entryTransitionValue, {
-                        toValue: 1, duration: 100, useNativeDriver: true, delay: 0
-                    }).start();
-                });
+                // VerifyPhoneNum.sendOTP(phoneNumber, (result, code) => {
+                //     switch (result) {
+                //         case 'OTP_DETECTED':
+                //             this.setState({ otp: code, otpError: false, statusText: "" });
+                //             this.continuePressed();
+                //             break;
+                //         case 'OTP_SENT':
+                //             this.setState({ statusText: "OTP send to +91 " + this.state.phoneNumber });
+                //             break;
+                //         case 'OTP_FAILED': this.setState({ statusText: "Failed to send OTP, try again." });
+                //             break;
+                //     }
+                // });
+                try {
+                    const confirmation = await auth().signInWithPhoneNumber('+91' + phoneNumber)
+                    this.setState({ phoneNumberError: false, confirmation })
+                    Animated.timing(this.state.exitTransitionValue, {
+                        toValue: 0, duration: 100, useNativeDriver: true, delay: 0
+                    }).start((result) => {
+                        this.setState({ showPhoneNumberInput: false });
+                        Animated.timing(this.state.entryTransitionValue, {
+                            toValue: 1, duration: 100, useNativeDriver: true, delay: 0
+                        }).start()
+                    });
+                }
+                catch (err) {
+                    console.log(err)
+                    this.setState({ statusText: "Failed to send OTP, try again." })
+                }
             }
         }
         else {
@@ -246,21 +255,17 @@ class LoginScreen extends Component {
                 this.setState({ otpError: true });
             else {
                 this.setState({ otpError: false, statusText: 'Please Wait...', verifying: true });
-                VerifyPhoneNum.verifyOTP(otp, (result) => {
-                    switch (result) {
-                        case 'VERIFICATION_SUCCESS':
-                            this.login();
-                            break;
-                        case 'VERIFICATION_FAILED':
-                        case 'ERROR':
-                            this.setState({
-                                statusText: "OTP verification failed. Try again.",
-                                otpError: true,
-                                verifying: false
-                            });
-                            break;
-                    }
-                });
+                try {
+                    await this.state.confirmation.confirm(otp)
+                    this.login()
+                } catch (error) {
+                    console.log(error)
+                    this.setState({
+                        statusText: "OTP verification failed. Try again.",
+                        otpError: true,
+                        verifying: false
+                    });
+                }
             }
         }
     }
@@ -318,10 +323,12 @@ class LoginScreen extends Component {
                 isLoggedIn = "false"
 
             if (isLoggedIn === "true")
-                this.props.navigation.dispatch(CommonActions.reset({
-                    index: 0,
-                    routes: [{ name: 'mainScreen' }]
-                }))
+                setTimeout(() => {
+                    this.props.navigation.dispatch(CommonActions.reset({
+                        index: 0,
+                        routes: [{ name: 'mainScreen' }]
+                    }))
+                }, 300)
             else
                 this.startFadeInAnim()
         } catch (err) {
