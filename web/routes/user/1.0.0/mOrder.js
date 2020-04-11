@@ -2,11 +2,11 @@ const express = require('express')
 const router = express.Router()
 const axios = require('axios')
 
-const auth = require('../../middleware/auth')
-const Order = require('../../models/Order')
-const OrderId = require('../../models/OrderId');
-const Branch = require('../../models/Branch');
-const Product = require('../../models/Product')
+const auth = require('../../../middleware/auth')
+const Order = require('../../../models/Order')
+const OrderId = require('../../../models/OrderId');
+const Branch = require('../../../models/Branch');
+const Product = require('../../../models/Product')
 
 router.get('/', auth, async (req, res) => {
     try {

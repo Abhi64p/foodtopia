@@ -3,9 +3,11 @@ import {
     View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput, Dimensions,
     TouchableNativeFeedback
 } from 'react-native';
-import LoadingView from '../components/LoadingView';
+import { connect } from 'react-redux'
 
+import LoadingView from '../components/LoadingView'
 import { logout, fetchJSON } from '../utils/Common'
+import { changeScreen } from '../actions/settingsActions'
 
 class ProfileScreen extends Component {
 
@@ -275,7 +277,8 @@ class ProfileScreen extends Component {
     }
 
     logout = async () => {
-        await this.setState({ logoutPopup: false })
+        this.setState({ logoutPopup: false })
+        this.props.changeScreen('home')
         logout(this.props.navigation);
     }
 
@@ -329,4 +332,8 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ProfileScreen;
+const mapDispatchToProps = dispatch => ({
+    changeScreen: (screen) => dispatch(changeScreen(screen))
+})
+
+export default connect(null, mapDispatchToProps)(ProfileScreen);

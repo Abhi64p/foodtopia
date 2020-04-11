@@ -1,7 +1,7 @@
 const express = require('express')
 
-const auth = require('../../middleware/auth')
-const Branch = require('../../models/Branch')
+const auth = require('../../../middleware/auth')
+const Branch = require('../../../models/Branch')
 const router = express.Router()
 
 router.get('/', auth, async (req, res) => {

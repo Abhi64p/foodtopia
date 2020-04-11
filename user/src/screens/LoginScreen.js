@@ -11,7 +11,6 @@ import { connect } from 'react-redux';
 
 import { updateFCMToken } from '../actions/settingsActions'
 import AndroidNotification from '../utils/AndroidNotification'
-import VerifyPhoneNum from '../utils/VerifyPhoneNum';
 import LoadingView from '../components/LoadingView';
 import { fetchJSON } from '../utils/Common'
 import AppLogo from '../icons/logo.png'
@@ -211,19 +210,6 @@ class LoginScreen extends Component {
             if (error)
                 this.setState({ phoneNumberError: true });
             else {
-                // VerifyPhoneNum.sendOTP(phoneNumber, (result, code) => {
-                //     switch (result) {
-                //         case 'OTP_DETECTED':
-                //             this.setState({ otp: code, otpError: false, statusText: "" });
-                //             this.continuePressed();
-                //             break;
-                //         case 'OTP_SENT':
-                //             this.setState({ statusText: "OTP send to +91 " + this.state.phoneNumber });
-                //             break;
-                //         case 'OTP_FAILED': this.setState({ statusText: "Failed to send OTP, try again." });
-                //             break;
-                //     }
-                // });
                 try {
                     const confirmation = await auth().signInWithPhoneNumber('+91' + phoneNumber)
                     this.setState({ phoneNumberError: false, confirmation })

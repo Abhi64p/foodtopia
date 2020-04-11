@@ -21,7 +21,6 @@ public class CustomModule implements ReactPackage
     @Override @NonNull
     public List<NativeModule> createNativeModules(@NonNull ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
-        modules.add(new VerifyPhoneNum(reactContext));
         modules.add(new AndroidNotification(reactContext));
         return modules;
     }

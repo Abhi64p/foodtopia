@@ -3,7 +3,7 @@ import { CommonActions } from '@react-navigation/native'
 import auth from '@react-native-firebase/auth'
 
 // export const Server = "http://192.168.1.37:5000";
- export const Server = "https://fudtopia.el.r.appspot.com";
+export const Server = "https://fudtopia.el.r.appspot.com";
 export const AppVersion = "1.0.0";
 
 const readToken = async () => {
@@ -21,7 +21,7 @@ export const fetchJSON = async (apiName, body = {}, method = 'POST') => {
     if (token == null)
         token = '';
     try {
-        let response = await fetch(Server + '/api/'+ AppVersion + '/' + apiName,
+        let response = await fetch(Server + '/api/user/' + AppVersion + '/' + apiName,
             {
                 method,
                 headers: {
@@ -30,7 +30,7 @@ export const fetchJSON = async (apiName, body = {}, method = 'POST') => {
                     'x-auth-token': token,
                     'x-app-version': AppVersion
                 },
-                body: method === 'GET'? undefined : JSON.stringify(body)
+                body: method === 'GET' ? undefined : JSON.stringify(body)
             });
 
         if (response.status == 200) {

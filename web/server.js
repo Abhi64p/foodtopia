@@ -15,10 +15,13 @@ app.use('/api/order', require('./routes/order'))
 app.use('/api/product', require('./routes/product'))
 app.use('/img', require('./routes/image'))
 
-app.use('/api/1.0.0/mauth', require('./routes/1.0.0/mAuth'))
-app.use('/api/1.0.0/mbranch', require('./routes/1.0.0/mBranch'))
-app.use('/api/1.0.0/morder', require('./routes/1.0.0/mOrder'))
-app.use('/api/1.0.0/mproduct', require('./routes/1.0.0/mProduct'))
+app.use('/api/user/1.0.0/mauth', require('./routes/user/1.0.0/mAuth'))
+app.use('/api/user/1.0.0/mbranch', require('./routes/user/1.0.0/mBranch'))
+app.use('/api/user/1.0.0/morder', require('./routes/user/1.0.0/mOrder'))
+app.use('/api/user/1.0.0/mproduct', require('./routes/user/1.0.0/mProduct'))
+
+app.use('/api/delivery/1.0.0/mauth', require('./routes/delivery/1.0.0/mAuth'))
+app.use('/api/delivery/1.0.0/morder', require('./routes/delivery/1.0.0/mOrder'))
 
 if (process.env.NODE_ENV === 'production') {
 	app.use(express.static('client/build'))

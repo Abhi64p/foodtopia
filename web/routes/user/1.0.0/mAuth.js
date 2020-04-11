@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 
 const router = express.Router()
-const auth = require('../../middleware/auth');
-const MUser = require('../../models/MUser')
+const auth = require('../../../middleware/auth');
+const MUser = require('../../../models/MUser')
 
 router.get('/', auth, async (req, res) => {
     let user = await MUser.findById(req.user.id);
