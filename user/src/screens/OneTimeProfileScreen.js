@@ -71,7 +71,8 @@ class OneTimeProfileScreen extends Component {
                                     borderColor: this.state.nameError ? '#e53935' : '#25b7d3',
                                     marginTop: 10
                                 }}
-                                placeholder='Name' />
+                                placeholder='Name'
+                            />
                             <TextInput
                                 onChangeText={(text) => { this.state.address = text }}
                                 defaultValue={this.state.address}
@@ -80,7 +81,8 @@ class OneTimeProfileScreen extends Component {
                                     borderColor: this.state.addressError ? '#e53935' : '#25b7d3',
                                     marginTop: 10
                                 }}
-                                placeholder='Address' />
+                                placeholder='Admission No. (or ID)'
+                            />
                             <TextInput
                                 onChangeText={(text) => { this.state.pincode = text }}
                                 defaultValue={this.state.pincode}
@@ -89,8 +91,8 @@ class OneTimeProfileScreen extends Component {
                                     borderColor: this.state.pincodeError ? '#e53935' : '#25b7d3',
                                     marginTop: 10
                                 }}
-                                placeholder='Pincode'
-                                keyboardType='numeric' />
+                                placeholder='Dept.'
+                            />
                             {
                                 (!this.state.loading && !this.state.updating) &&
                                 <View

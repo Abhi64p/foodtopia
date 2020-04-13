@@ -30,7 +30,9 @@ const ListItem = ({ orderApprove, orderCancel, orderDeliver, orderInfo }) => {
 			<div className='mdl-card__supporting-text'>
 				<p>{orderInfo.status}</p>
 				<p>
-					Address: {orderInfo.address}, {orderInfo.pincode}
+					Admission No. (or ID): {orderInfo.address}
+					<br />
+					Dept.: {orderInfo.pincode}
 					<br />
 					Phone: {orderInfo.phoneNumber}
 					<br />

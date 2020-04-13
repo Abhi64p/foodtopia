@@ -8,6 +8,7 @@ import { connect } from 'react-redux'
 import LoadingView from '../components/LoadingView'
 import { logout, fetchJSON } from '../utils/Common'
 import { changeScreen } from '../actions/settingsActions'
+import CloseIcon from '../icons/close.png'
 
 class ProfileScreen extends Component {
 
@@ -78,11 +79,11 @@ class ProfileScreen extends Component {
                                     <Text style={{ flex: 4, fontSize: 17 }}>{this.state.loadedName}</Text>
                                 </View>
                                 <View style={styles.detailsRow}>
-                                    <Text style={{ flex: 2, fontSize: 17 }}>Address:</Text>
+                                    <Text style={{ flex: 2, fontSize: 17 }}>Admission No. (or ID):</Text>
                                     <Text style={{ flex: 4, fontSize: 17 }}>{this.state.loadedAddress}</Text>
                                 </View>
                                 <View style={styles.detailsRow}>
-                                    <Text style={{ flex: 2, fontSize: 17 }}>Pincode:</Text>
+                                    <Text style={{ flex: 2, fontSize: 17 }}>Dept.:</Text>
                                     <Text style={{ flex: 4, fontSize: 17 }}>{this.state.loadedPincode}</Text>
                                 </View>
                             </View>
@@ -114,47 +115,67 @@ class ProfileScreen extends Component {
                     animationType={"fade"}>
                     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                         <View style={{
-                            alignItems: 'center', justifyContent: 'center', width: '80%', height: this.state.modalHeight, elevation: 5,
-                            borderRadius: 10, borderWidth: 2, backgroundColor: 'white', borderColor: 'white'
+                            alignItems: 'center', justifyContent: 'center', width: '80%',
+                            height: this.state.modalHeight, elevation: 5, borderColor: 'white',
+                            borderRadius: 10, borderWidth: 2, backgroundColor: 'white'
                         }}>
-                            <View style={{ width: '100%', alignItems: 'flex-end', marginRight: 10, marginTop: 10, flex: 1 }}>
+                            <View style={{
+                                width: '100%', alignItems: 'flex-end', marginRight: 10, marginTop: 10,
+                                flex: 1
+                            }}>
                                 <TouchableOpacity onPress={this.editMenuDismiss}>
-                                    <Image source={require('../icons/close.png')} resizeMode='contain'
+                                    <Image
+                                        source={CloseIcon}
+                                        resizeMode='contain'
                                         style={{ width: 30, height: 30 }} />
                                 </TouchableOpacity>
                             </View>
-                            <TextInput onChangeText={(text) => { this.state.name = text }} defaultValue={this.state.name}
+                            <TextInput
+                                onChangeText={(text) => { this.state.name = text }}
+                                defaultValue={this.state.name}
                                 style={{
                                     width: '80%', borderWidth: 1, borderRadius: 10, padding: 10,
-                                    borderColor: this.state.nameError ? '#e53935' : '#64b5f6', flex: 1, marginTop: 10
+                                    borderColor: this.state.nameError ? '#e53935' : '#64b5f6',
+                                    flex: 1, marginTop: 10
                                 }}
                                 placeholder='Name'
                             />
-                            <TextInput onChangeText={(text) => { this.state.address = text }} defaultValue={this.state.address}
+                            <TextInput
+                                onChangeText={(text) => { this.state.address = text }}
+                                defaultValue={this.state.address}
                                 style={{
                                     width: '80%', borderWidth: 1, borderRadius: 10, padding: 10,
-                                    borderColor: this.state.addressError ? '#e53935' : '#64b5f6', flex: 1, marginTop: 10
+                                    borderColor: this.state.addressError ? '#e53935' : '#64b5f6',
+                                    flex: 1, marginTop: 10
                                 }}
-                                placeholder='Address'
+                                placeholder='Admission No (or ID)'
                             />
-                            <TextInput onChangeText={(text) => { this.state.pincode = text }} defaultValue={this.state.pincode}
+                            <TextInput
+                                onChangeText={(text) => { this.state.pincode = text }}
+                                defaultValue={this.state.pincode}
                                 style={{
                                     width: '80%', borderWidth: 1, borderRadius: 10, padding: 10,
-                                    borderColor: this.state.pincodeError ? '#e53935' : '#64b5f6', flex: 1, marginTop: 10
+                                    borderColor: this.state.pincodeError ? '#e53935' : '#64b5f6',
+                                    flex: 1, marginTop: 10
                                 }}
-                                placeholder='Pincode'
-                                keyboardType='numeric'
+                                placeholder='Dept.'
                             />
                             {
-                                !this.state.updating && <TouchableOpacity style={{ flex: 2, justifyContent: 'center' }}
-                                    onPress={this.editMenuUpdate}>
+                                !this.state.updating &&
+                                <TouchableOpacity
+                                    style={{ flex: 2, justifyContent: 'center' }}
+                                    onPress={this.editMenuUpdate}
+                                >
                                     <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>
                                         {this.state.networkError ? 'Error, Try again?' : 'Update'}
                                     </Text>
                                 </TouchableOpacity>
                             }
                             {
-                                this.state.updating && <View style={{ flex: 2, justifyContent: 'center' }}><LoadingView /></View>
+                                this.state.updating &&
+                                <View style={{ flex: 2, justifyContent: 'center' }}>
+                                    <LoadingView />
+                                </View>
                             }
                         </View>
                     </View>
@@ -165,14 +186,20 @@ class ProfileScreen extends Component {
                     animationType={"fade"}>
                     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                         <View style={{
-                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%', elevation: 5,
-                            borderRadius: 10, borderWidth: 2, backgroundColor: 'white', borderColor: 'white'
+                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%',
+                            elevation: 5, borderRadius: 10, borderWidth: 2, backgroundColor: 'white',
+                            borderColor: 'white'
                         }}>
                             <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>
                                 Can't connect to server, try again!
                                 </Text>
-                            <TouchableOpacity style={{ flex: 1, justifyContent: 'center' }} onPress={this.loadContents}>
-                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>Try Again?</Text>
+                            <TouchableOpacity
+                                style={{ flex: 1, justifyContent: 'center' }}
+                                onPress={this.loadContents}
+                            >
+                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>
+                                    Try Again?
+                                </Text>
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -183,17 +210,33 @@ class ProfileScreen extends Component {
                     animationType={"fade"}>
                     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                         <View style={{
-                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%', elevation: 5,
-                            borderRadius: 10, borderWidth: 2, backgroundColor: 'white', borderColor: 'white'
+                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%',
+                            elevation: 5, borderRadius: 10, borderWidth: 2, backgroundColor: 'white',
+                            borderColor: 'white'
                         }}>
-                            <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>Confirm logout</Text>
+                            <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>
+                                Confirm logout
+                            </Text>
                             <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                                <TouchableOpacity style={{ flex: 1, justifyContent: 'center' }} onPress={this.logout}>
-                                    <Text style={{ color: '#f44336', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>Logout</Text>
+                                <TouchableOpacity
+                                    style={{ flex: 1, justifyContent: 'center' }}
+                                    onPress={this.logout}
+                                >
+                                    <Text style={{
+                                        color: '#f44336', fontSize: 14, fontWeight: 'bold',
+                                        textAlign: 'center'
+                                    }}>Logout</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{ flex: 1, justifyContent: 'center' }}
-                                    onPress={() => { this.setState({ logoutPopup: false }); }}>
-                                    <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>Cancel</Text>
+                                <TouchableOpacity
+                                    style={{ flex: 1, justifyContent: 'center' }}
+                                    onPress={() => { this.setState({ logoutPopup: false }); }}
+                                >
+                                    <Text style={{
+                                        color: '#1e88e5', fontSize: 14, fontWeight: 'bold',
+                                        textAlign: 'center'
+                                    }}>
+                                        Cancel
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -208,20 +251,11 @@ class ProfileScreen extends Component {
     }
 
     editMenuUpdate = () => {
-        const name = this.state.name;
-        const address = this.state.address;
-        const pincode = this.state.pincode;
+        const { name, address, pincode } = this.state;
 
-        let nameError = false;
-        let addressError = false;
-        let pincodeError = false;
-
-        if (name.length === 0)
-            nameError = true;
-        if (address.length === 0)
-            addressError = true;
-        if (pincode.length !== 6)
-            pincodeError = true;
+        const nameError = name.length === 0;
+        const addressError = address.length === 0;
+        const pincodeError = pincode.length === 0;
 
         if (!(nameError || addressError || pincodeError)) {
             this.updateDetails();

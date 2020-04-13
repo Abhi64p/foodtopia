@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { clearProducts } from '../actions/productActions'
 import { changeScreen } from '../actions/settingsActions'
 import CloseIcon from '../icons/close.png'
+import BackIcon from '../icons/back.png'
 const Common = require('../utils/Common');
 
 class CheckoutScreen extends Component {
@@ -44,45 +45,68 @@ class CheckoutScreen extends Component {
             <View style={styles.container}>
                 <View style={styles.topBar} opacity={this.state.popupVisible ? 0.3 : 1.0}>
                     <TouchableOpacity onPress={this.backPressed}>
-                        <Image source={require('../icons/back.png')}
-                            style={{ width: 25, height: '100%', marginLeft: 10, marginRight: 10 }} resizeMode='contain' />
+                        <Image
+                            source={BackIcon}
+                            style={{ width: 25, height: '100%', marginLeft: 10, marginRight: 10 }}
+                            resizeMode='contain' />
                     </TouchableOpacity>
                     <Text style={{ fontSize: 17 }}>Checkout</Text>
                 </View>
-                <View style={{ flex: 10 }} opacity={(this.state.orderPlacedPopup || this.state.loadingErrorPopup) ? 0.3 : 1.0}>
+                <View
+                    style={{ flex: 10 }}
+                    opacity={(this.state.orderPlacedPopup || this.state.loadingErrorPopup) ? 0.3 : 1.0}
+                >
                     <View style={{ flex: 9 }}>
                         <Text style={{
                             paddingLeft: 10, fontSize: 20, marginLeft: 10,
                             marginRight: 10, paddingTop: 10, flex: 1
-                        }}>Address</Text>
+                        }}>Delivery Details</Text>
                         {
-                            !this.state.addressLoading && <View style={{ flex: 7, marginLeft: 30 }}>
+                            !this.state.addressLoading &&
+                            <View style={{ flex: 7, marginLeft: 30 }}>
                                 <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 18, flex: 1 }}>Name: </Text>
+                                    <Text style={{ fontSize: 18, flex: 2 }}>Name: </Text>
                                     <TextInput
-                                        onChangeText={(text) => { this.state.name = text }} defaultValue={this.state.name}
+                                        onChangeText={(text) => { this.state.name = text }}
+                                        defaultValue={this.state.name}
                                         style={{
-                                            flex: 3, borderWidth: 1, borderRadius: 10, padding: 10, marginRight: 20, marginBottom: 10,
-                                            borderColor: this.state.nameError ? '#e53935' : '#64b5f6', marginTop: 10, marginLeft: 5
-                                        }} placeholder='Name' />
+                                            flex: 4, borderWidth: 1, borderRadius: 10, padding: 10,
+                                            marginRight: 20, marginBottom: 10,
+                                            borderColor: this.state.nameError ? '#e53935' : '#64b5f6',
+                                            marginTop: 10, marginLeft: 5
+                                        }}
+                                        placeholder='Name'
+                                    />
                                 </View>
                                 <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 18, flex: 1 }}>Address: </Text>
+                                    <Text style={{ fontSize: 18, flex: 2 }}>
+                                        Admission No. (or ID):
+                                    </Text>
                                     <TextInput
-                                        onChangeText={(text) => { this.state.address = text }} defaultValue={this.state.address}
+                                        onChangeText={(text) => { this.state.address = text }}
+                                        defaultValue={this.state.address}
                                         style={{
-                                            flex: 3, borderWidth: 1, borderRadius: 10, padding: 10, marginRight: 20, marginBottom: 10,
-                                            borderColor: this.state.addressError ? '#e53935' : '#64b5f6', marginTop: 10, marginLeft: 5
-                                        }} placeholder='Address' />
+                                            flex: 4, borderWidth: 1, borderRadius: 10, padding: 10,
+                                            marginRight: 20, marginBottom: 10,
+                                            borderColor: this.state.addressError ? '#e53935' : '#64b5f6',
+                                            marginTop: 10, marginLeft: 5
+                                        }}
+                                        placeholder='Admission No. (or ID)'
+                                    />
                                 </View>
                                 <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                                    <Text style={{ fontSize: 18, flex: 1 }}>Pincode: </Text>
+                                    <Text style={{ fontSize: 18, flex: 2 }}>Dept.: </Text>
                                     <TextInput
-                                        onChangeText={(text) => { this.state.pincode = text }} defaultValue={this.state.pincode}
+                                        onChangeText={(text) => { this.state.pincode = text }}
+                                        defaultValue={this.state.pincode}
                                         style={{
-                                            flex: 3, borderWidth: 1, borderRadius: 10, padding: 10, marginRight: 20, marginBottom: 10,
-                                            borderColor: this.state.pincodeError ? '#e53935' : '#64b5f6', marginTop: 10, marginLeft: 5
-                                        }} placeholder='Pincode' keyboardType='numeric' />
+                                            flex: 4, borderWidth: 1, borderRadius: 10, padding: 10,
+                                            marginRight: 20, marginBottom: 10,
+                                            borderColor: this.state.pincodeError ? '#e53935' : '#64b5f6',
+                                            marginTop: 10, marginLeft: 5
+                                        }}
+                                        placeholder='Dept.'
+                                    />
                                 </View>
                                 <View style={{ flexDirection: 'row', flex: 1, alignItems: 'center' }}>
                                     <Text style={{ fontSize: 18, flex: 1 }}>Phone: </Text>
@@ -91,7 +115,8 @@ class CheckoutScreen extends Component {
                             </View>
                         }
                         {
-                            this.state.addressLoading && <View style={{ alignItems: 'center', justifyContent: 'center', flex: 6 }}>
+                            this.state.addressLoading &&
+                            <View style={{ alignItems: 'center', justifyContent: 'center', flex: 6 }}>
                                 <LoadingView />
                             </View>
                         }
@@ -111,11 +136,13 @@ class CheckoutScreen extends Component {
                     <View style={{ flex: 1, alignItems: 'center', marginBottom: 5 }}>
                         <TouchableNativeFeedback onPress={this.placeOrderPressed}>
                             <View style={{
-                                height: '90%', width: '90%', borderRadius: 5, alignItems: 'center', justifyContent: 'center',
-                                backgroundColor: '#00e676',
+                                height: '90%', width: '90%', borderRadius: 5, alignItems: 'center',
+                                justifyContent: 'center', backgroundColor: '#00e676',
                                 elevation: (this.state.orderPlacedPopup || this.state.loadingErrorPopup) ? 0 : 2
                             }}>
-                                <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>Place Order</Text>
+                                <Text style={{ color: 'white', fontSize: 20, fontWeight: 'bold' }}>
+                                    Place Order
+                                </Text>
                             </View>
                         </TouchableNativeFeedback>
                     </View>
@@ -134,7 +161,8 @@ class CheckoutScreen extends Component {
                                 style={{ alignSelf: 'flex-end' }}
                             >
                                 {
-                                    this.state.orderUploadingError && <TouchableOpacity onPress={this.dismissOrderErrorPopup}>
+                                    this.state.orderUploadingError &&
+                                    <TouchableOpacity onPress={this.dismissOrderErrorPopup}>
                                         <Image
                                             source={CloseIcon}
                                             resizeMode='contain'
@@ -186,12 +214,20 @@ class CheckoutScreen extends Component {
                     animationType={"fade"}>
                     <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
                         <View style={{
-                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%', elevation: 5,
-                            borderRadius: 10, borderWidth: 2, backgroundColor: 'white', borderColor: 'white'
+                            alignItems: 'center', justifyContent: 'center', width: '70%', height: '30%',
+                            elevation: 5, borderRadius: 10, borderWidth: 2, backgroundColor: 'white',
+                            borderColor: 'white'
                         }}>
-                            <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>Server Unreachable! Try again?</Text>
-                            <TouchableOpacity style={{ flex: 1, justifyContent: 'center' }} onPress={this.loadAddress}>
-                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>Okay</Text>
+                            <Text style={{ flex: 1, textAlignVertical: 'bottom', fontSize: 14 }}>
+                                Server Unreachable! Try again?
+                                </Text>
+                            <TouchableOpacity
+                                style={{ flex: 1, justifyContent: 'center' }}
+                                onPress={this.loadAddress}
+                            >
+                                <Text style={{ color: '#1e88e5', fontSize: 14, fontWeight: 'bold' }}>
+                                    Okay
+                                    </Text>
                             </TouchableOpacity>
                         </View>
                     </View>

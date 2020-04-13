@@ -23,9 +23,7 @@ class AboutScreen extends Component {
                 </View>
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'white' }}>
                     <Text style={{ fontSize: 16 }}>Developed by</Text>
-                    <Image source={require('../icons/hexify.jpg')} resizeMode='contain'
-                        style={{ width: logoDimension, height: logoDimension }} />
-                    <Text>hello@hexify.tech</Text>
+                    <Text>Group 21</Text>
                 </View>
             </View>
         );
