@@ -25,3 +25,8 @@ client/.gitignore
 client/package.json
 client/package-lock.json
 client/yarn.lock
+
+logo.svg
+README.md
+yarn.lock
+package-lock.json

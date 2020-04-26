@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import LoadingView from '../components/LoadingView';
-import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import OrderHistoryCardView from '../components/OrderHistoryCardView';
 import { connect } from 'react-redux'
 
