@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "67396310733-uk03vrdprqr2sibe02innu3t5cagogki.apps.googleusercontent.com",
+          "client_id": "67396310733-qr5u16874vtrbqgmnad3tfc361gglhoi.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "tech.hexify.foodtopia",
-            "certificate_hash": "36aa0635420e22d6b7d022e4489d5bd57fac8755"
+            "certificate_hash": "7ee457b835f0b0aedbe0b990eda0073f6d81c754"
           }
         },
         {

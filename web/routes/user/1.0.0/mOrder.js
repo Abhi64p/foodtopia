@@ -98,8 +98,8 @@ router.post('/', auth, async (req, res) => {
         });
 
 
-        await order.save();
-        res.json({ status: 'order-placed' });
+        const result = await order.save();
+        res.json({ status: 'order-placed', id: result._id});
 
         let messageString = "";
 

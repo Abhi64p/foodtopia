@@ -167,7 +167,7 @@ class OneTimeProfileScreen extends Component {
 
         let nameError = name.length === 0;
         let addressError = address.length === 0;
-        let pincodeError = pincode.length !== 6;
+        let pincodeError = pincode.length === 0;
 
         if (!(nameError || addressError || pincodeError)) {
             this.setState({
